@@ -1,0 +1,21 @@
+{
+  "name": "playwright",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:web": "pnpm --filter web start:e2e",
+    "test": "pnpm playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.7.9"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.50.0",
+    "dotenv": "^16.4.5"
+  }
+}
