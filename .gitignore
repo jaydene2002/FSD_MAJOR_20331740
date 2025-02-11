@@ -4,6 +4,8 @@
 node_modules
 .pnp
 .pnp.js
+.auth
+dev.db
 
 # Local env files
 .env
@@ -38,3 +40,5 @@ yarn-error.log*
 *.pem
 
 *storybook.log
+
+__screenshots__
