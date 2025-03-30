@@ -9,10 +9,24 @@ export function SummaryItem({
   link: string;
   count: number;
   isSelected: boolean;
-  title?: string;
+  title: string;
 }) {
-  // TODO: Implement the summary item
-  // must show the number of posts in that category and the name
-  // if if is selected it must show in different color/background
-  return <li>Item</li>;
+  return (
+    <li className={isSelected ? "selected" : ""}>
+      <a 
+        href={link} 
+        title={title}
+        className={`block text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 ${
+          isSelected ? "text-blue-600 dark:text-blue-400" : ""
+        }`}
+      >
+        {name}
+        {count > 0 && (
+          <span data-test-id="post-count" className="ml-1">
+            ({count})
+          </span>
+        )}
+      </a>
+    </li>
+  );
 }

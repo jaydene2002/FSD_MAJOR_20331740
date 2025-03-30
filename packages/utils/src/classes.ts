@@ -3,12 +3,22 @@ export function cx(
     string | Record<string, boolean | null | undefined> | null | undefined
   >
 ): string {
-  // class helper that turns a list of classes into a single string
-  // if one of the classes is an object, it will add the key if the value is truthy
-
-  // e.g. cx("foo", "bar") => "foo bar"
-  // e.g. cx("foo", { bar: true }) => "foo bar"
-  return "";
+  return classes
+    .filter(Boolean)
+    .map((item) => {
+      if (typeof item === 'string') return item;
+      if (typeof item === 'object') {
+        return item
+          ? Object.entries(item)
+              .filter(([_, value]) => Boolean(value))
+              .map(([key]) => key)
+              .join(' ')
+          : '';
+      }
+      return '';
+    })
+    .join(' ')
+    .trim();
 }
 
 export default cx;

@@ -8,9 +8,12 @@ export function Main({
   posts: Post[];
   className?: string;
 }) {
+  // Filter to only show active posts
+  const activePosts = posts.filter(post => post.active);
+
   return (
     <main className={className}>
-      <BlogList posts={posts} />
+      <BlogList posts={activePosts} />
     </main>
   );
 }

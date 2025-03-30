@@ -14,7 +14,7 @@ Example implementation is in the image below.
 
 ### HOME SCREEN
 
-- [ ] User must see only the "active" posts
+ [ ] User must see only the "active" posts
 - [ ] User must see the list of blog post categories, where each category points to UI showing only posts of that category
 - [ ] User must see the list of blog post tags, where each tag points to UI showing only posts of that category
 - [ ] User must see the history of blog posts, showing month and year, where each moth, year tuple points to UI showing only posts of that category
@@ -23,7 +23,7 @@ Example implementation is in the image below.
   - blog title, pointing to detail page
   - short description
   - date
-  - image
+  - image-
   - tags
   - likes
   - views
