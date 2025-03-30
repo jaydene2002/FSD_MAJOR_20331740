@@ -1,14 +1,16 @@
 import { AppLayout } from "@/components/Layout/AppLayout";
 import { posts } from "@repo/db/data";
-import { getPostsByTag } from "@/functions/tags";
 import { Main } from "@/components/Main";
 
 export default async function Page({
   params,
 }: {
-  params: { tag: string };  // Remove Promise and searchParams since they're not needed
+  params: { name: string };  // Changed from tag to name to match the folder structure
 }) {
-  const filteredPosts = getPostsByTag(posts, params.tag);
+  // Filter posts by category
+  const filteredPosts = posts.filter(post => 
+    post.active && post.category.toLowerCase() === params.name.toLowerCase()
+  );
 
   return (
     <AppLayout>
