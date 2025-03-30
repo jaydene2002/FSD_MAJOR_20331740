@@ -1,22 +1,20 @@
+import { AppLayout } from "@/components/Layout/AppLayout";
 import { posts } from "@repo/db/data";
-import { getPostsByTag } from "../../../functions/tags";
-import { BlogListItem } from "../../../components/Blog/ListItem";
+import { getPostsByTag } from "@/functions/tags";
+import { Main } from "@/components/Main";
 
-export default async function TagPage({ params }: { params: { tag: string } }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { tag: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const filteredPosts = getPostsByTag(posts, params.tag);
 
   return (
-    <div>
-      <h1>Tag: {params.tag}</h1>
-      {filteredPosts.length === 0 ? (
-        <p>0 Posts</p>
-      ) : (
-        <div>
-          {filteredPosts.map((post) => (
-            <BlogListItem key={post.id} post={post} />
-          ))}
-        </div>
-      )}
-    </div>
+    <AppLayout>
+      <Main posts={filteredPosts} />
+    </AppLayout>
   );
 }

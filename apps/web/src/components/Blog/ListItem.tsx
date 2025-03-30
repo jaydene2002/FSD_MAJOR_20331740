@@ -1,5 +1,6 @@
 import { type Post } from "@repo/db/data";
 import Link from "next/link";
+import Image from "next/image";
 
 export function BlogListItem({ post }: { post: Post }) {
   // Format date
@@ -31,9 +32,11 @@ export function BlogListItem({ post }: { post: Post }) {
       </div>
 
       {post.imageUrl && (
-        <img 
+        <Image 
           src={post.imageUrl}
           alt={post.title}
+          width={800}
+          height={400}
           className="w-full rounded-lg"
         />
       )}
