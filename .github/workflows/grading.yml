@@ -15,9 +15,9 @@ jobs:
       CI: true
       DATABASE_URL: file:./dev.db
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      COURSE_ID: full-stack-development-comp3036-2025
       PASSWORD: 123
       JWT_SECRET: secret
-      COURSE_ID: full-stack-development-comp3036-2025
       # NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       # NEXTAUTH_URL: http://127.0.0.1:3001/
       # VERCEL_URL: http://127.0.0.1:3001/
@@ -106,7 +106,7 @@ jobs:
         uses: tomitrescak/skillpies-reporting@v1.0
         with:
           courseId: ${{env.COURSE_ID}}
-          sectionId: assignment-2-1-blog-client-in-advanced-react
+          sectionId: assignment-2-1-blog-client-in-next-js
           testResult: ${{steps.npm1.outputs.result}}
 
       ####################
