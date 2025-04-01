@@ -8,6 +8,18 @@ import "dotenv/config";
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+import fs from "fs";
+import path from "path";
+
+// Define the directory path
+const authDir = path.resolve(".auth");
+
+// Create .auth directory if it doesn't exist
+if (!fs.existsSync(authDir)) {
+  fs.mkdirSync(authDir);
+  console.log(".auth directory created");
+}
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
