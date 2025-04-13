@@ -9,7 +9,6 @@ export default async function Page({
 }) {
   const { year, month } = await params;
 
-  // Filter posts by year and month
   const filteredPosts = posts.filter((post) => {
     const postDate = new Date(post.date);
     return (

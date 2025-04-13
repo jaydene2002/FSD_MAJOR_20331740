@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@repo/ui": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",
     "@tailwindcss/postcss": "^4.0.0",
     "marked": "^15.0.6",
@@ -23,6 +23,7 @@
     "postcss": "^8.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
     "tailwindcss": "^4.0.0"
   },
   "devDependencies": {

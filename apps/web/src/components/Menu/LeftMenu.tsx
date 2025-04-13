@@ -5,7 +5,7 @@ import { TagList } from "./TagList";
 
 export function LeftMenu() {
   return (
-    <div className="p-4 pt-6"> {/* Added pt-6 to prevent Categories from being cut off */}
+    <div className="p-4 pt-6"> {}
       <div className="mb-6">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Categories</h2>
       </div>

@@ -13,7 +13,7 @@ export async function incrementViews(postId: number) {
 export async function toggleLike(postId: number) {
   const post = posts.find(p => p.id === postId);
   if (post) {
-    // Use a type assertion to add the _liked property
+    
     const postWithLiked = post as any;
     
     // Toggle like/unlike

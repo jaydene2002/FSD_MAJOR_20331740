@@ -5,12 +5,12 @@ import { Main } from "@/components/Main";
 
 export default async function Page({
   params,
-  searchParams,
+  
 }: {
-  params: { tag: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  params: Promise<{ tag: string }>;
 }) {
-  const filteredPosts = getPostsByTag(posts, params.tag);
+  const { tag } = await params;
+  const filteredPosts = getPostsByTag(posts, tag);
 
   return (
     <AppLayout>

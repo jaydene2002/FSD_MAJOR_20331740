@@ -11,12 +11,12 @@ interface ThemeContextProps {
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
-// 1. Theme Provider
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    // Get initial theme from localStorage
+    
     const savedTheme = localStorage.getItem("theme") as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
@@ -38,7 +38,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// 2. useTheme hook
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {

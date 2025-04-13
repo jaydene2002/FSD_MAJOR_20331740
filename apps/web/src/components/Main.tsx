@@ -8,7 +8,6 @@ export function Main({
   posts: Post[];
   className?: string;
 }) {
-  // Filter to only show active posts
   const activePosts = posts.filter(post => post.active);
 
   return (

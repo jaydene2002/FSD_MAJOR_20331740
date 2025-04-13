@@ -18,7 +18,6 @@ const months = [
   "November",
   "December",
 ];
-
 export async function HistoryList({
   selectedYear,
   selectedMonth,
@@ -31,7 +30,7 @@ export async function HistoryList({
   const historyItems = history(posts);
 
   return (
-    <LinkList title="History">
+    <LinkList> {}
       {historyItems.map((item) => (
         <SummaryItem
           key={`${item.year}-${item.month}`}

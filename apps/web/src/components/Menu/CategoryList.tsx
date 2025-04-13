@@ -5,10 +5,10 @@ import { LinkList } from "./LinkList";
 import { SummaryItem } from "./SummaryItem";
 
 export function CategoryList({ posts }: { posts: Post[] }) {
-  // Compute categories from posts (might only return Node and React)
+  
   const computedCategories = categories(posts);
 
-  // Check if Mongo and DevOps are already included (ignoring case)
+  
   const hasMongo = computedCategories.find(
     (c) => c.name.toLowerCase() === "mongo"
   );
