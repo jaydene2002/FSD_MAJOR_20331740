@@ -63,11 +63,10 @@ export default async function Home({
     );
   }
 
-  // Initial filter values from URL params
   const initialContentFilter = content || '';
   const initialTagFilter = tag || '';
   const initialDateFilter = date || '';
-  const initialSortOption = sort || ''; // Changed default to empty string
+  const initialSortOption = sort || ''; 
   
   return (
     <main className="p-6">

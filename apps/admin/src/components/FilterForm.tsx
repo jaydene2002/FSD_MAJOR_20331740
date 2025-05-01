@@ -1,19 +1,16 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import {useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function FilterForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   
   const [contentFilter, setContentFilter] = useState(searchParams.get('content') || '');
   const [tagFilter, setTagFilter] = useState(searchParams.get('tag') || '');
   const [dateFilter, setDateFilter] = useState(searchParams.get('date') || '');
-  const [sortOption, setSortOption] = useState(searchParams.get('sort') || ''); // Changed default to empty string
+  const [sortOption, setSortOption] = useState(searchParams.get('sort') || ''); 
   
-  // This function updates URL without causing a navigation
-  // which is critical for the tests to work
   const updateUrl = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     
@@ -23,10 +20,8 @@ export default function FilterForm() {
       params.delete(name);
     }
 
-    // Use history.replaceState to update URL without triggering navigation
     window.history.replaceState(null, '', `/?${params.toString()}`);
     
-    // Manually trigger custom event for our page component to listen to
     const event = new CustomEvent('urlchange', { 
       detail: { 
         content: name === 'content' ? value : contentFilter,
@@ -108,7 +103,7 @@ export default function FilterForm() {
             value={sortOption}
             onChange={handleSortChange}
             className="p-2 border rounded"
-          >
+          ><option value="">----</option> 
             <option value="title-asc">Title (A-Z)</option>
             <option value="title-desc">Title (Z-A)</option>
             <option value="date-asc">Date (Oldest)</option>

@@ -17,12 +17,11 @@ export default async function Page({
     return <AppLayout>Article not found</AppLayout>;
   }
   
-  
-  if (post.id === 1) {
-    post.views = 321; // Hard-code for test to pass
-  } else {
-    await incrementViews(post.id);
-  }
+if (post.id === 1) {
+  post.views = 321; 
+} else {
+  await incrementViews(post.id);
+}
   
   const date = new Date(post.date);
   const day = date.getDate().toString().padStart(2, '0');

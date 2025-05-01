@@ -1,158 +1,170 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import type { Post } from '@repo/db/data';
+import { Post } from "@repo/db/data";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
-export default function PostList({ 
-  allPosts, 
-  initialContent = '', 
-  initialTag = '', 
-  initialDate = '', 
-  initialSort = ''  // Changed default to empty string (no sorting)
-}: { 
+export default function PostList({
+  allPosts,
+  initialContent = '',
+  initialTag = '',
+  initialDate = '',
+  initialSort = ''
+}: {
   allPosts: Post[],
-  initialContent?: string, 
-  initialTag?: string, 
-  initialDate?: string, 
-  initialSort?: string 
+  initialContent?: string,
+  initialTag?: string,
+  initialDate?: string,
+  initialSort?: string
 }) {
-  const [contentFilter, setContentFilter] = useState(initialContent);
+  const [searchText, setSearchText] = useState(initialContent);
   const [tagFilter, setTagFilter] = useState(initialTag);
   const [dateFilter, setDateFilter] = useState(initialDate);
   const [sortOption, setSortOption] = useState(initialSort);
-  const [displayPosts, setDisplayPosts] = useState<Post[]>([]);
-  
-  // Listen for URL changes from FilterForm
+
   useEffect(() => {
     const handleUrlChange = (event: Event) => {
       const customEvent = event as CustomEvent;
-      setContentFilter(customEvent.detail.content || '');
+      setSearchText(customEvent.detail.content || '');
       setTagFilter(customEvent.detail.tag || '');
       setDateFilter(customEvent.detail.date || '');
-      setSortOption(customEvent.detail.sort || '');  // Changed default to empty string
+      setSortOption(customEvent.detail.sort || '');
     };
-    
+
     window.addEventListener('urlchange', handleUrlChange);
     return () => window.removeEventListener('urlchange', handleUrlChange);
   }, []);
-  
-  // Apply filters and sorting whenever filters change
-  useEffect(() => {
-    // Get the "No front end framework is the best" post that's needed for tests
-    const frontEndFrameworkPost = allPosts.find(p => p.title === 'No front end framework is the best');
-    
-    // Check if we're in the Sort Items test (explicit sort option selected)
-    if (sortOption) {
-      // Apply regular sorting for explicit sort operations
-      let filteredPosts = [...allPosts];
-      
-      if (sortOption === 'title-asc') {
-        filteredPosts.sort((a, b) => a.title.localeCompare(b.title));
-      } else if (sortOption === 'title-desc') {
-        filteredPosts.sort((a, b) => b.title.localeCompare(a.title));
-      } else if (sortOption === 'date-asc') {
-        filteredPosts.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-      } else if (sortOption === 'date-desc') {
-        filteredPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      }
-      
-      setDisplayPosts(filteredPosts.slice(0, 4));
-      return;
-    }
-    
-    // Test case: Filter by date
-    if (dateFilter === '01012022' && !tagFilter) {
-      const post1 = allPosts.find(p => p.title.includes('Boost your conversion rate'));
-      const post2 = allPosts.find(p => p.title.includes('No front end framework is the best'));
-      
-      if (post1 && post2) {
-        setDisplayPosts([post1, post2]);
-        return;
-      }
-    }
-    
-    // Test case: Combine Filters
-    if (dateFilter === '01012022' && tagFilter === 'Front') {
-      const post = allPosts.find(p => p.title.includes('No front end framework is the best'));
-      
-      if (post) {
-        setDisplayPosts([post]);
-        return;
-      }
-    }
-    
-    // Default behavior (list items test)
-    let filteredPosts = [...allPosts];
-    
+
+  const filteredPosts = useMemo(() => {
+    let result = [...allPosts];
+
     // Content filter
-    if (contentFilter) {
-      filteredPosts = filteredPosts.filter(post => 
-        post.title.toLowerCase().includes(contentFilter.toLowerCase()) ||
-        post.content.toLowerCase().includes(contentFilter.toLowerCase())
+    if (searchText) {
+      result = result.filter(
+        (p) =>
+          p.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          p.content.toLowerCase().includes(searchText.toLowerCase())
       );
     }
-    
+
     // Tag filter
     if (tagFilter) {
-      filteredPosts = filteredPosts.filter(post => 
-        post.tags.toLowerCase().includes(tagFilter.toLowerCase())
+      result = result.filter((p) =>
+        p.tags.toLowerCase().includes(tagFilter.toLowerCase())
       );
     }
-    
-    // Date filter
+
     if (dateFilter) {
-      filteredPosts = filteredPosts.filter(post => {
-        const postDate = new Date(post.date);
-        return postDate.getFullYear() === 2022;
-      });
+      const isValidFormat = /^\d{8}$/.test(dateFilter);
+      
+      if (isValidFormat) {
+        const day = dateFilter.substring(0, 2);
+        const month = dateFilter.substring(2, 4);
+        const year = dateFilter.substring(4);
+    
+        const inputDate = new Date(`${year}-${month}-${day}`);
+    
+        
+        if (!isNaN(inputDate.getTime())) {
+          result = result.filter((p) => new Date(p.date) >= inputDate);
+        } else {
+          result = [];
+        }
+      } else {
+        result = [];
+      }
     }
-    
-    // For any other case - limit to 4 posts if no filters
-    const postsToDisplay = (contentFilter || tagFilter || dateFilter) 
-      ? filteredPosts 
-      : filteredPosts.slice(0, 4);
-    
-    // For List Items test - ensure "No front end framework" is first in default view
-    if (!contentFilter && !tagFilter && !dateFilter && !sortOption && frontEndFrameworkPost) {
-      const otherPosts = postsToDisplay.filter(p => p.id !== frontEndFrameworkPost.id);
-      setDisplayPosts([frontEndFrameworkPost, ...otherPosts]);
+
+    // Sorting
+    if (sortOption === "title-asc") {
+      result.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortOption === "title-desc") {
+      result.sort((a, b) => b.title.localeCompare(a.title));
+    } else if (sortOption === "date-asc") {
+      result.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else if (sortOption === "date-desc") {
+      result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     } else {
-      setDisplayPosts(postsToDisplay);
+      // Default sort - newest first
+      result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
-  }, [allPosts, contentFilter, tagFilter, dateFilter, sortOption]);
-  
+
+    // Apply 4 post limit if no filters
+    if (!searchText && !tagFilter && !dateFilter && !sortOption) {
+      result = result.slice(0, 4);
+    }
+    
+    return result;
+  }, [allPosts, searchText, tagFilter, dateFilter, sortOption]);
+
+  // Display posts based on filters
+const displayPosts = useMemo(() => {
+  if (!searchText && !tagFilter && !dateFilter && !sortOption) {
+    return filteredPosts.sort((a, b) => {
+      if (a.active && !b.active) return -1;
+      if (!a.active && b.active) return 1;
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }).slice(0, 4);
+  }
+  return filteredPosts;
+}, [filteredPosts, searchText, tagFilter, dateFilter, sortOption]);
+
   return (
-    <div className="space-y-4" data-test-id="post-list">
-      {displayPosts.map((post) => (
-        <article key={post.id} className="p-4 border rounded flex gap-4" data-test-id={`post-${post.id}`}>
-          {post.imageUrl && (
-            <img 
-              src={post.imageUrl} 
-              alt={post.title} 
-              className="w-24 h-24 object-cover rounded"
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {displayPosts.map((post) => (
+          <article
+            key={post.id}
+            className="border rounded-lg overflow-hidden shadow-sm"
+            data-test-id={`post-${post.id}`}
+          >
+            <img
+              src={post.imageUrl}
+              alt={post.title}
+              className="w-full h-48 object-cover"
             />
-          )}
-          <div className="flex-1">
-            <Link href={`/post/${post.urlId}`} className="text-lg font-bold hover:text-blue-600">
-              {post.title}
-            </Link>
-            <div className="mt-2 text-sm text-gray-600">
-              <span className="mr-3">{post.category}</span>
-              <span className="mr-3">#{post.tags.split(',').join(', #')}</span>
-              <span className="mr-3">Posted on {new Date(post.date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
-              <button 
-                className={`px-2 py-1 rounded text-xs ${post.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+            <div className="p-4">
+              <Link
+                href={`/post/${post.urlId}`}
+                className="text-xl font-semibold text-gray-900 hover:text-indigo-600"
               >
-                {post.active ? 'Active' : 'Inactive'}
-              </button>
+                {post.title}
+              </Link>
+              <p className="mt-2 text-sm text-gray-600">{post.description}</p>
+              <div className="mt-4 flex items-center justify-between">
+                <button
+                  className={`px-3 py-1 rounded-full text-sm ${
+                    post.active
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {post.active ? "Active" : "Inactive"}
+                </button>
+              </div>
+              <div className="mt-2">
+                <span className="text-sm text-gray-500">
+                  #{post.tags.split(",").join(", #")}
+                </span>
+              </div>
+              <div className="mt-2">
+                <span className="text-sm text-gray-500">
+                  {post.category}
+                </span>
+              </div>
+              <div className="mt-2">
+                <time className="text-sm text-gray-500">
+                  Posted on {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </time>
+              </div>
             </div>
-          </div>
-        </article>
-      ))}
+          </article>
+        ))}
+      </div>
+      
       {displayPosts.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-gray-500 text-lg">No posts match your filters</p>
+          <p className="text-gray-500">No posts match your filters</p>
         </div>
       )}
     </div>

@@ -9,8 +9,7 @@ export function BlogListItem({ post }: { post: Post }) {
   const year = date.getFullYear();
   const formattedDate = `${day} ${month} ${year}`;
   
-  // Hard-code the view count for post ID 1 to match the test expectation
-  const displayViews = post.id === 1 ? 320 : post.views;
+  const displayViews = post.views;
   
   return (
     <article data-test-id={`blog-post-${post.id}`} className="space-y-4">

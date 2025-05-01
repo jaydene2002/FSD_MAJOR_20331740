@@ -4,16 +4,16 @@ import { useState, useRef, useEffect } from 'react';
 import { Post } from '@repo/db/data';
 import { marked } from 'marked';
 
-interface PostFormProps {
+type PostFormProps = {
   post?: Post;
   isCreate?: boolean;
 }
 
 export default function PostForm({ post, isCreate = false }: PostFormProps) {
-  // Form state
+  
   const [title, setTitle] = useState(post?.title || '');
   const [description, setDescription] = useState(post?.description || '');
-  const [content, setContent] = useState(post?.content || '**sint voluptas**');
+  const [content, setContent] = useState(post?.content || '');
   const [imageUrl, setImageUrl] = useState(post?.imageUrl || '');
   const [tags, setTags] = useState(post?.tags || '');
   const [category, setCategory] = useState(post?.category || '');
@@ -70,7 +70,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
     
     setShowGlobalError(false);
     
-    // In a real application, you would save the post here
+    
     alert('Post updated successfully');
   };
 
