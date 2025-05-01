@@ -34,21 +34,21 @@ setup(
 // Uncomment once you start working on the assignment 3
 ////////////////////////////////////////////////////////
 
-// setup(
-//   "authenticate assignment 3",
-//   { tag: "@a3" },
-//   async ({ playwright }) => {
-//     const authFile = ".auth/user.json";
+setup(
+  "authenticate assignment 3",
+  { tag: "@a3" },
+  async ({ playwright }) => {
+    const authFile = ".auth/user.json";
 
-//     const apiContext = await playwright.request.newContext();
+    const apiContext = await playwright.request.newContext();
 
-//     await apiContext.post("/api/auth", {
-//       data: JSON.stringify({ password: "123" }),
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
+    await apiContext.post("/api/auth", {
+      data: JSON.stringify({ password: "123" }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-//     await apiContext.storageState({ path: authFile });
-//   },
-// );
+    await apiContext.storageState({ path: authFile });
+  },
+);
