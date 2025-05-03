@@ -11,14 +11,19 @@ datasource db {
 }
 
 model Post {
-  id     Int      @id @default(autoincrement())
-  urlId  String   @unique
-  title  String
-  date   DateTime @default(now())
-  views  Int      @default(0)
-  active Boolean  @default(true)
-  Likes  Like[]
-  // Incomplete
+  id          Int      @id @default(autoincrement())
+  urlId       String   @unique
+  title       String
+  content     String   
+  description String
+  imageUrl    String
+  date        DateTime @default(now())
+  category    String
+  views       Int      @default(0)
+  likes       Int      @default(0)
+  tags        String
+  active      Boolean  @default(true)
+  Likes       Like[]
 }
 
 model Like {

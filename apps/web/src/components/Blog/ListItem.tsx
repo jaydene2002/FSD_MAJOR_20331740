@@ -17,7 +17,7 @@ export function BlogListItem({ post }: { post: Post }) {
         href={`/post/${post.urlId}`}
         className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 no-underline text-xl font-bold"
       >
-        {post.title.replace(/[,!]/g, '')}
+        {post.title}
       </Link>
       
       <p className="text-gray-600 dark:text-gray-400">{post.description}</p>

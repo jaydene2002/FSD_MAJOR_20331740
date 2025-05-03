@@ -5,14 +5,22 @@ import { isLoggedIn } from "../utils/auth";
 import FilterForm from "../components/FilterForm";
 import Link from "next/link";
 import PostList from "../components/PostList";
+import jwt from "jsonwebtoken";
+import { env } from "@repo/env/admin";
 
 async function login(formData: FormData) {
   "use server";
   const password = formData.get("password");
   if (password === "123") {
+    // Create a proper JWT token
+    const token = jwt.sign(
+      { userId: "admin" }, // Payload with user info
+      env.JWT_SECRET || "super-secret-password", // Use the secret from your .env
+    );
+    
     (await cookies()).set({
       name: "auth_token",
-      value: "authenticated",
+      value: token, // Set the JWT as the cookie value
       path: "/",
       httpOnly: true
     });

@@ -37,7 +37,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
-    "@types/node": "^22.13.1",
+    "@types/node": "^22.15.3",
     "vitest": "^3.0.4"
   }
 }

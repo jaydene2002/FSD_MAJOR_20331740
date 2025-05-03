@@ -6,28 +6,28 @@ import fs from "fs";
 // Delete the code block below if you are not using it
 ////////////////////////////////////////
 
-setup(
-  "authenticate assignment 2",
-  { tag: "@a2" },
-  async ({ page, playwright }) => {
-    const authFile = ".auth/user.json";
-    const content = {
-      cookies: [
-        {
-          name: "auth_token",  // Change from "password" to "auth_token"
-          value: "authenticated",  // Change from "123" to "authenticated"
-          domain: "localhost",
-          secure: false,
-          expires: -1,
-          path: "/",
-          httpOnly: false,
-          sameSite: "Lax",
-        },
-      ],
-    };
-    fs.writeFileSync(authFile, JSON.stringify(content, null, 2));
-  },
-);
+// setup(
+//   "authenticate assignment 2",
+//   { tag: "@a2" },
+//   async ({ page, playwright }) => {
+//     const authFile = ".auth/user.json";
+//     const content = {
+//       cookies: [
+//         {
+//           name: "auth_token",  
+//           value: "authenticated",  
+//           domain: "localhost",
+//           secure: false,
+//           expires: -1,
+//           path: "/",
+//           httpOnly: false,
+//           sameSite: "Lax",
+//         },
+//       ],
+//     };
+//     fs.writeFileSync(authFile, JSON.stringify(content, null, 2));
+//   },
+// );
 
 ////////////////////////////////////////////////////////
 // Authentication for Assignment 3

@@ -3,6 +3,7 @@
 import { Post } from "@repo/db/data";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { togglePostActive } from "../actions/posts";
 
 export default function PostList({
   allPosts,
@@ -21,6 +22,16 @@ export default function PostList({
   const [tagFilter, setTagFilter] = useState(initialTag);
   const [dateFilter, setDateFilter] = useState(initialDate);
   const [sortOption, setSortOption] = useState(initialSort);
+  const [localPosts, setLocalPosts] = useState<Post[]>(allPosts);
+
+  useEffect(() => {
+    const sortedPosts = [...allPosts].sort((a, b) => {
+      if (a.active && !b.active) return -1;
+      if (!a.active && b.active) return 1;
+      return 0;
+    });
+    setLocalPosts(sortedPosts);
+  }, [allPosts]);
 
   useEffect(() => {
     const handleUrlChange = (event: Event) => {
@@ -35,10 +46,29 @@ export default function PostList({
     return () => window.removeEventListener('urlchange', handleUrlChange);
   }, []);
 
-  const filteredPosts = useMemo(() => {
-    let result = [...allPosts];
+  const handleToggleActive = async (postId: number) => {
+    try {
+      const updatedPost = await togglePostActive(postId);
+      if (updatedPost) {
+        setLocalPosts(prevPosts => {
+          const updatedPosts = prevPosts.map(post => 
+            post.id === postId ? { ...post, active: updatedPost.active } : post
+          );
+          return updatedPosts.sort((a, b) => {
+            if (a.active && !b.active) return -1;
+            if (!a.active && b.active) return 1;
+            return 0;
+          });
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling post active status:", error);
+    }
+  };
 
-    // Content filter
+  const filteredPosts = useMemo(() => {
+    let result = [...localPosts];
+
     if (searchText) {
       result = result.filter(
         (p) =>
@@ -47,7 +77,6 @@ export default function PostList({
       );
     }
 
-    // Tag filter
     if (tagFilter) {
       result = result.filter((p) =>
         p.tags.toLowerCase().includes(tagFilter.toLowerCase())
@@ -64,7 +93,6 @@ export default function PostList({
     
         const inputDate = new Date(`${year}-${month}-${day}`);
     
-        
         if (!isNaN(inputDate.getTime())) {
           result = result.filter((p) => new Date(p.date) >= inputDate);
         } else {
@@ -75,7 +103,6 @@ export default function PostList({
       }
     }
 
-    // Sorting
     if (sortOption === "title-asc") {
       result.sort((a, b) => a.title.localeCompare(b.title));
     } else if (sortOption === "title-desc") {
@@ -85,29 +112,23 @@ export default function PostList({
     } else if (sortOption === "date-desc") {
       result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     } else {
-      // Default sort - newest first
       result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    }
-
-    // Apply 4 post limit if no filters
-    if (!searchText && !tagFilter && !dateFilter && !sortOption) {
-      result = result.slice(0, 4);
     }
     
     return result;
-  }, [allPosts, searchText, tagFilter, dateFilter, sortOption]);
+  }, [localPosts, searchText, tagFilter, dateFilter, sortOption]);
 
-  // Display posts based on filters
-const displayPosts = useMemo(() => {
-  if (!searchText && !tagFilter && !dateFilter && !sortOption) {
-    return filteredPosts.sort((a, b) => {
-      if (a.active && !b.active) return -1;
-      if (!a.active && b.active) return 1;
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    }).slice(0, 4);
-  }
-  return filteredPosts;
-}, [filteredPosts, searchText, tagFilter, dateFilter, sortOption]);
+  const displayPosts = useMemo(() => {
+    if (!searchText && !tagFilter && !dateFilter && !sortOption) {
+      const sortedPosts = [...filteredPosts].sort((a, b) => {
+        if (a.active && !b.active) return -1;
+        if (!a.active && b.active) return 1;
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+      return sortedPosts.slice(0, 4);
+    }
+    return filteredPosts;
+  }, [filteredPosts, searchText, tagFilter, dateFilter, sortOption]);
 
   return (
     <div className="space-y-6">
@@ -133,6 +154,7 @@ const displayPosts = useMemo(() => {
               <p className="mt-2 text-sm text-gray-600">{post.description}</p>
               <div className="mt-4 flex items-center justify-between">
                 <button
+                  onClick={() => handleToggleActive(post.id)}
                   className={`px-3 py-1 rounded-full text-sm ${
                     post.active
                       ? "bg-green-100 text-green-800"
