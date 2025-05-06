@@ -5,35 +5,14 @@ import { isLoggedIn } from "../utils/auth";
 import FilterForm from "../components/FilterForm";
 import Link from "next/link";
 import PostList from "../components/PostList";
-import jwt from "jsonwebtoken";
-import { env } from "@repo/env/admin";
-
-async function login(formData: FormData) {
-  "use server";
-  const password = formData.get("password");
-  if (password === "123") {
-    // Create a proper JWT token
-    const token = jwt.sign(
-      { userId: "admin" }, // Payload with user info
-      env.JWT_SECRET || "super-secret-password", // Use the secret from your .env
-    );
-    
-    (await cookies()).set({
-      name: "auth_token",
-      value: token, // Set the JWT as the cookie value
-      path: "/",
-      httpOnly: true
-    });
-  }
-  redirect("/");
-}
 
 async function logout() {
   "use server";
-  (await cookies()).delete({
-    name: "auth_token",
-    path: "/"
-  });
+  
+  // Delete the auth_token cookie
+  (await cookies()).delete("auth_token");
+  
+  // Redirect to the login page
   redirect("/");
 }
 
@@ -50,7 +29,12 @@ export default async function Home({
     return (
       <main className="flex min-h-screen flex-col items-center justify-center p-4">
         <h1 className="text-2xl font-bold mb-4">Sign in to your account</h1>
-        <form action={login} className="w-full max-w-md space-y-4">
+        {/* Using a standard form that posts directly to the API route */}
+        <form 
+          action="/api/auth" 
+          method="post"
+          className="w-full max-w-md space-y-4"
+        >
           <div>
             <label htmlFor="password" className="block mb-2">Password</label>
             <input 
@@ -87,7 +71,7 @@ export default async function Home({
           <form action={logout}>
             <button 
               type="submit"
-              className="bg-red-500 text-white px-4 py-2 rounded"
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
               Logout
             </button>

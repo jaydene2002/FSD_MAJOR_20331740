@@ -19,7 +19,6 @@ export default async function EditPostPage({
 
   // Find the post by urlId
   const post = posts.find(p => p.urlId === urlId);
-  
   if (!post) {
     return (
       <main className="p-6">
