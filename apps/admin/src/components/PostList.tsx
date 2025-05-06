@@ -23,14 +23,9 @@ export default function PostList({
   const [dateFilter, setDateFilter] = useState(initialDate);
   const [sortOption, setSortOption] = useState(initialSort);
   const [localPosts, setLocalPosts] = useState<Post[]>(allPosts);
-
+console.log("allPosts", allPosts);
   useEffect(() => {
-    const sortedPosts = [...allPosts].sort((a, b) => {
-      if (a.active && !b.active) return -1;
-      if (!a.active && b.active) return 1;
-      return 0;
-    });
-    setLocalPosts(sortedPosts);
+    setLocalPosts(allPosts);
   }, [allPosts]);
 
   useEffect(() => {
@@ -46,24 +41,18 @@ export default function PostList({
     return () => window.removeEventListener('urlchange', handleUrlChange);
   }, []);
 
-  const handleToggleActive = async (postId: number) => {
-    try {
-      const updatedPost = await togglePostActive(postId);
-      if (updatedPost) {
-        setLocalPosts(prevPosts => {
-          const updatedPosts = prevPosts.map(post => 
-            post.id === postId ? { ...post, active: updatedPost.active } : post
-          );
-          return updatedPosts.sort((a, b) => {
-            if (a.active && !b.active) return -1;
-            if (!a.active && b.active) return 1;
-            return 0;
-          });
-        });
-      }
-    } catch (error) {
-      console.error("Error toggling post active status:", error);
-    }
+  // Simplified toggle function
+  const handleToggleActive = async (id: number) => {
+    // Create a new array with the post toggled
+    const updatedPosts = localPosts.map(post => 
+      post.id === id ? { ...post, active: !post.active } : post
+    );
+    
+    // Update UI immediately
+    setLocalPosts(updatedPosts);
+    
+    // Call server action to persist the change
+    await togglePostActive(id);
   };
 
   const filteredPosts = useMemo(() => {
@@ -118,11 +107,11 @@ export default function PostList({
     return result;
   }, [localPosts, searchText, tagFilter, dateFilter, sortOption]);
 
+  // Important: Do not sort by active status here to maintain post order
   const displayPosts = useMemo(() => {
     if (!searchText && !tagFilter && !dateFilter && !sortOption) {
+      // Only sort by date, not active status
       const sortedPosts = [...filteredPosts].sort((a, b) => {
-        if (a.active && !b.active) return -1;
-        if (!a.active && b.active) return 1;
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
       return sortedPosts.slice(0, 4);
@@ -153,16 +142,21 @@ export default function PostList({
               </Link>
               <p className="mt-2 text-sm text-gray-600">{post.description}</p>
               <div className="mt-4 flex items-center justify-between">
-                <button
-                  onClick={() => handleToggleActive(post.id)}
-                  className={`px-3 py-1 rounded-full text-sm ${
-                    post.active
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {post.active ? "Active" : "Inactive"}
-                </button>
+                {post.active ? (
+                  <button
+                    onClick={() => handleToggleActive(post.id)}
+                    className="px-3 py-1 rounded-full text-sm bg-green-100 text-green-800"
+                  >
+                    Active
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleToggleActive(post.id)}
+                    className="px-3 py-1 rounded-full text-sm bg-red-100 text-red-800"
+                  >
+                    Inactive
+                  </button>
+                )}
               </div>
               <div className="mt-2">
                 <span className="text-sm text-gray-500">

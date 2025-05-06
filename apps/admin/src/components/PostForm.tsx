@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Post } from '@repo/db/data';
 import { marked } from 'marked';
+import { savePost } from '../actions/posts';
 
 type PostFormProps = {
   post?: Post;
@@ -11,13 +12,27 @@ type PostFormProps = {
 
 export default function PostForm({ post, isCreate = false }: PostFormProps) {
   
-  const [title, setTitle] = useState(post?.title || '');
-  const [description, setDescription] = useState(post?.description || '');
-  const [content, setContent] = useState(post?.content || '');
-  const [imageUrl, setImageUrl] = useState(post?.imageUrl || '');
-  const [tags, setTags] = useState(post?.tags || '');
-  const [category, setCategory] = useState(post?.category || '');
+  const defaultPost: Post = isCreate 
+    ? {
+        id: 0, // Temporary ID that will be replaced
+        urlId: '',
+        title: '',
+        description: '',
+        content: '',
+        imageUrl: '',
+        tags: '',
+        category: '',
+        date: new Date(),
+        views: 0,
+        likes: 0,
+        active: true
+      }
+    : post!;
   
+  const [localPost, setLocalPost] = useState<Post>(defaultPost);
+  const {title, description, content, imageUrl, tags, category} = localPost;
+  const [success, setSuccess] = useState(false);
+
   // Error state
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGlobalError, setShowGlobalError] = useState(false);
@@ -31,34 +46,39 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
   const urlRegex = /^(http|https):\/\/[^ "]+$/;
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSuccess(false);
     
     // Validate all fields
     const newErrors: Record<string, string> = {};
     
-    if (!title.trim()) {
+    if (!title?.trim()) {
       newErrors.title = 'Title is required';
     }
     
-    if (!description.trim()) {
+    if (!description?.trim()) {
       newErrors.description = 'Description is required';
     } else if (description.length > 200) {
       newErrors.description = 'Description is too long. Maximum is 200 characters';
     }
     
-    if (!content.trim()) {
+    if (!content?.trim()) {
       newErrors.content = 'Content is required';
     }
     
-    if (!imageUrl.trim()) {
+    if (!imageUrl?.trim()) {
       newErrors.imageUrl = 'Image URL is required';
     } else if (!urlRegex.test(imageUrl)) {
       newErrors.imageUrl = 'This is not a valid URL';
     }
     
-    if (!tags.trim()) {
+    if (!tags?.trim()) {
       newErrors.tags = 'At least one tag is required';
+    }
+    
+    if (isCreate && !category?.trim()) {
+      newErrors.category = 'Category is required';
     }
     
     setErrors(newErrors);
@@ -68,10 +88,10 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
       return;
     }
     
+    console.log('Post data:', localPost);
+    await savePost(localPost);
     setShowGlobalError(false);
-    
-    
-    alert('Post updated successfully');
+    setSuccess(true);
   };
 
   // Toggle preview and save cursor position
@@ -105,7 +125,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           name="title"
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setLocalPost({...localPost, title:e.target.value})}
           className="w-full p-2 border rounded"
         />
         {errors.title && <p className="mt-1 text-red-600">{errors.title}</p>}
@@ -118,7 +138,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           name="description"
           rows={3}
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => setLocalPost({...localPost, description:e.target.value})}
           className="w-full p-2 border rounded"
         ></textarea>
         <p className="text-sm text-gray-500 mt-1">Max 200 characters</p>
@@ -143,7 +163,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
             name="content"
             rows={10}
             value={content}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => setLocalPost({...localPost, content:e.target.value})}
             className="w-full p-2 border rounded font-mono"
             ref={contentRef}
           ></textarea>
@@ -166,7 +186,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
             name="category"
             type="text"
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => setLocalPost({...localPost, category:e.target.value})}
             className="w-full p-2 border rounded"
           />
           {errors.category && <p className="mt-1 text-red-600">{errors.category}</p>}
@@ -180,7 +200,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           name="tags"
           type="text"
           value={tags}
-          onChange={(e) => setTags(e.target.value)}
+          onChange={(e) => setLocalPost({...localPost, tags:e.target.value})}
           className="w-full p-2 border rounded"
         />
         {errors.tags && <p className="mt-1 text-red-600">{errors.tags}</p>}
@@ -193,7 +213,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           name="imageUrl"
           type="text"
           value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
+          onChange={(e) => setLocalPost({...localPost, imageUrl:e.target.value})}
           className="w-full p-2 border rounded"
         />
         {errors.imageUrl && <p className="mt-1 text-red-600">{errors.imageUrl}</p>}
@@ -210,7 +230,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           />
         </div>
       )}
-      
+      {success && <div>Post updated successfully</div>}
       <div className="flex justify-end gap-4">
         <button
           type="button"
