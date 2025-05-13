@@ -1,9 +1,8 @@
-import { cookies } from "next/headers";
-import { posts } from "@repo/db/data";
 import { redirect } from "next/navigation";
 import { isLoggedIn } from "../../../utils/auth";
 import Link from "next/link";
 import PostForm from "../../../components/PostForm";
+import { getPosts } from "../../../actions/posts";
 
 export default async function EditPostPage({ 
   params 
@@ -17,8 +16,10 @@ export default async function EditPostPage({
     redirect("/");
   }
 
-  // Find the post by urlId
-  const post = posts.find(p => p.urlId === urlId);
+  // Get all posts and find the one with matching the urlId
+  const allPosts = await getPosts();
+  const post = allPosts.find(p => p.urlId === urlId);
+  
   if (!post) {
     return (
       <main className="p-6">

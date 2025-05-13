@@ -2,6 +2,7 @@
 
 import { posts } from "@repo/db/data";
 
+
 const likesByIP: Record<number, Set<string>> = {};
 
 export async function incrementViews(postId: number) {

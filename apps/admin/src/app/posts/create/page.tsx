@@ -3,6 +3,7 @@ import { isLoggedIn } from "../../../utils/auth";
 import Link from "next/link";
 import PostForm from "../../../components/PostForm";
 
+//Create post page 
 export default async function CreatePostPage() {
   const loggedIn = await isLoggedIn();
   if (!loggedIn) {

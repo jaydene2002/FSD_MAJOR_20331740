@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     let password;
     
     if (contentType.includes("application/json")) {
-      // Handle JSON submission
+      // Handle the JSON submission
       const body = await request.json();
       password = body.password;
     } else if (contentType.includes("application/x-www-form-urlencoded")) {
