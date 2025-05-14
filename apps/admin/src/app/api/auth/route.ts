@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { env } from "@repo/env/admin";
 
+/**
+ * Handles authentication requests
+ * POST endpoint for user login with password validation
+ */
 export async function POST(request: Request) {
   try {
     // Check if the request is a form submission or a JSON payload
@@ -10,30 +14,31 @@ export async function POST(request: Request) {
     let password;
     
     if (contentType.includes("application/json")) {
-      // Handle the JSON submission
+      // Handle the JSON submission - used for API calls
       const body = await request.json();
       password = body.password;
     } else if (contentType.includes("application/x-www-form-urlencoded")) {
-      // Handle form submission
+      // Handle form submission - used for web form login
       const formData = await request.formData();
       password = formData.get("password");
     }
     
     // Check against environment variable password
+    // This compares the submitted password with the expected admin password
     if (password === env.PASSWORD) {
-      // Create JWT token
+      // Create JWT token with a generous 1-year expiration
       const token = jwt.sign(
         { userId: "admin" },
         env.JWT_SECRET,
         { expiresIn: "365d" }
       );
       
-      // Set auth cookie
+      // Set auth cookie for persistent authentication
       (await cookies()).set({
         name: "auth_token",
         value: token,
         path: "/",
-        httpOnly: true,
+        httpOnly: true, // Prevents JavaScript access for security
       });
       
       // For form submissions, redirect to home page
@@ -57,6 +62,10 @@ export async function POST(request: Request) {
   }
 }
 
+/**
+ * Handles logout requests
+ * Removes the authentication cookie
+ */
 export async function DELETE() {
   (await cookies()).delete("auth_token");
   return NextResponse.json({ success: true });
