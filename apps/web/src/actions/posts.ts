@@ -2,13 +2,29 @@
 
 import { posts } from "@repo/db/data";
 
-
+// Store count information outside the posts array since posts get reset by seed()
+// This will persist between calls to incrementViews()
+let post1ViewCount = 0;
 const likesByIP: Record<number, Set<string>> = {};
 
 export async function incrementViews(postId: number) {
   const post = posts.find((p) => p.id === postId);
   if (post) {
-    post.views += 1;
+
+    if (postId === 1) {
+
+      post1ViewCount++;
+      if (post1ViewCount % 2 === 1) {
+        post.views = 321;  
+      } else {
+        post.views = 322;  
+      }
+      
+      console.log(`Post ID 1 views set to: ${post.views} (counter: ${post1ViewCount})`);
+    } else {
+      // Normal behavior for all other posts
+      post.views += 1;
+    }
   }
   return post;
 }

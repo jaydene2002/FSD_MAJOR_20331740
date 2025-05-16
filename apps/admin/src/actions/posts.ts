@@ -137,9 +137,6 @@ export async function getPosts(filters?: {
       }
     }
     
-    // EXECUTE THE DATABASE QUERY: Fetch filtered posts from the database
-    // This is where the actual database interaction happens
-    // The 'where' object contains all our filter conditions, and 'orderBy' controls the sorting
     const dbPosts = await client.db.post.findMany({
       where,    // Apply all the filter conditions constructed above
       orderBy   // Apply the determined sort order
