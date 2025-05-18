@@ -30,9 +30,11 @@ export async function fetchUpdatedPosts(
   }
 }
 
-export async function loadPaginatedPosts(page: number, limit: number = 10) {
+export async function loadPaginatedPosts(page: number = 1, limit: number = 10) {
   try {
-    const skip = (page - 1) * limit;
+    // Ensure page is at least 1
+    const currentPage = Math.max(page, 1);
+    const skip = (currentPage - 1) * limit;
 
     const posts = await client.db.post.findMany({
       where: { active: true },
@@ -41,11 +43,32 @@ export async function loadPaginatedPosts(page: number, limit: number = 10) {
       take: limit,
     });
 
-    console.log(`Fetched posts for page ${page}:`, posts);
-    return posts;
+    const totalPosts = await client.db.post.count({ where: { active: true } });
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    console.log(`Fetched posts for page ${currentPage}:`, posts);
+    return {
+      posts,
+      pagination: {
+        currentPage,
+        totalPages,
+        totalPosts,
+        hasNextPage: currentPage < totalPages,
+        hasPreviousPage: currentPage > 1,
+      },
+    };
   } catch (error) {
     console.error("Error fetching paginated posts:", error);
-    return [];
+    return {
+      posts: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: 0,
+        totalPosts: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    };
   }
 }
 
