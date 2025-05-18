@@ -2,11 +2,6 @@
 
 import { client } from "@repo/db/client";
 
-// Store count information outside the posts array since posts get reset by seed()
-// This will persist between calls to incrementViews()
-let post1ViewCount = 0;
-const likesByIP: Record<number, Set<string>> = {};
-
 export async function fetchUpdatedPosts(urlId?: string) {
   try {
     if (urlId) {
@@ -48,12 +43,15 @@ export async function incrementViews(postId: number) {
 export async function toggleLike(postId: number, userIP: string) {
   try {
     const existingLike = await client.db.like.findFirst({
-      where: { postId, userIP ,
+      where: { postId, userIP }
     });
 
     if (existingLike) {
       // Unlike
-      await client.db.like.delete({ where: { id: existingLike.id } });
+      await client.db.like.deleteMany({
+        where: {
+          postId, userIP // Use a combination of fields to uniquely identify the record
+        });
       const post = await client.db.post.update({
         where: { id: postId },
         data: { likes: { decrement: 1 } }

@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Post } from "@repo/db/data";
-import { marked } from "marked";
 import { savePost } from "../actions/posts";
+import dynamic from "next/dynamic";
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 type PostFormProps = {
   post?: Post;
@@ -35,11 +39,6 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
   // Error state
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showGlobalError, setShowGlobalError] = useState(false);
-
-  // Preview state
-  const [showPreview, setShowPreview] = useState(false);
-  const contentRef = useRef<HTMLTextAreaElement>(null);
-  const [cursorPosition, setCursorPosition] = useState<number>(0);
 
   // URL validation regex
   const urlRegex = /^(http|https):\/\/[^ "]+$/;
@@ -93,22 +92,6 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
     setSuccess(true);
   };
 
-  // Toggle preview and save cursor position
-  const togglePreview = () => {
-    if (!showPreview && contentRef.current) {
-      setCursorPosition(contentRef.current.selectionStart);
-    }
-    setShowPreview(!showPreview);
-  };
-
-  // Restore cursor position after closing preview
-  useEffect(() => {
-    if (!showPreview && contentRef.current) {
-      contentRef.current.focus();
-      contentRef.current.setSelectionRange(cursorPosition, cursorPosition);
-    }
-  }, [showPreview, cursorPosition]);
-
   return (
     <form className="max-w-4xl space-y-6" onSubmit={handleSubmit}>
       {showGlobalError && (
@@ -155,38 +138,17 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
       </div>
 
       <div>
-        <div className="mb-2 flex items-center justify-between">
-          <label htmlFor="content" className="font-medium">
-            Content (Markdown)
-          </label>
-          <button
-            type="button"
-            onClick={togglePreview}
-            className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-800"
-          >
-            {showPreview ? "Close Preview" : "Preview"}
-          </button>
-        </div>
+        <label htmlFor="content" className="font-medium">
+          Content (Markdown)
+        </label>
 
-        {!showPreview ? (
-          <textarea
-            id="content"
-            name="content"
-            rows={10}
-            value={content}
-            onChange={(e) =>
-              setLocalPost({ ...localPost, content: e.target.value })
-            }
-            className="w-full rounded border p-2 font-mono"
-            ref={contentRef}
-          ></textarea>
-        ) : (
-          <div
-            data-test-id="content-preview"
-            className="min-h-[200px] w-full rounded border bg-white p-4"
-            dangerouslySetInnerHTML={{ __html: marked.parse(content) }}
-          />
-        )}
+        <MDEditor
+          value={content}
+          onChange={(value) =>
+            setLocalPost({ ...localPost, content: value || "" })
+          }
+          className="w-full rounded border p-2 font-mono"
+        />
 
         {errors.content && (
           <p className="mt-1 text-red-600">{errors.content}</p>
