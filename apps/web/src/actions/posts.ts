@@ -19,7 +19,7 @@ export async function fetchUpdatedPosts(
     console.log("Fetching posts with filter:", filter);
     const posts = await client.db.post.findMany({
       where: whereClause,
-      orderBy: { date: "dec" },
+      orderBy: { date: "desc" },
     });
 
     console.log("Fetched filtered posts:", posts);

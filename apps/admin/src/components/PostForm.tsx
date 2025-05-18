@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { Post } from "@repo/db/data";
 import { savePost } from "../actions/posts";
-import dynamic from "next/dynamic";
-import "@uiw/react-md-editor/markdown-editor.css";
-import "@uiw/react-markdown-preview/markdown.css";
-
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+import RichTextEditor from "./RichTextEditor";
 
 type PostFormProps = {
   post?: Post;
@@ -139,17 +135,13 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
 
       <div>
         <label htmlFor="content" className="font-medium">
-          Content
+          Content (Markdown)
         </label>
-        <div id="markdown-editor-container">
-          <MDEditor
-            value={content}
-            onChange={(value) =>
-              setLocalPost({ ...localPost, content: value || "" })
-            }
-            className="w-full rounded border p-2 font-mono"
-          />
-        </div>
+
+        <RichTextEditor
+          value={content}
+          onChange={(value) => setLocalPost({ ...localPost, content: value })}
+        ></RichTextEditor>
 
         {errors.content && (
           <p className="mt-1 text-red-600">{errors.content}</p>
