@@ -1,9 +1,4 @@
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import React, { useRef, useState, useImperativeHandle, forwardRef } from "react";
 import { marked } from "marked";
 
 type RichTextEditorProps = {
@@ -19,10 +14,7 @@ export type RichTextEditorRef = {
 const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
   ({ value, onChange }, ref) => {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-    const cursorPositionRef = useRef<{ start: number; end: number }>({
-      start: 0,
-      end: 0,
-    });
+    const cursorPositionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
     const [showPreview, setShowPreview] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -81,10 +73,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       onChange(formattedText);
 
       setTimeout(() => {
-        textareaRef.current?.setSelectionRange(
-          start + tag.length + 2,
-          end + tag.length + 2,
-        );
+        textareaRef.current?.setSelectionRange(start + tag.length + 2, end + tag.length + 2);
       }, 0);
     };
 
@@ -141,7 +130,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
         )}
       </div>
     );
-  },
+  }
 );
 
 export default RichTextEditor;

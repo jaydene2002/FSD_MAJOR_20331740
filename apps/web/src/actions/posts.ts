@@ -66,7 +66,7 @@ export async function incrementViews(postId: number) {
 export async function toggleLike(postId: number, userIP: string) {
   try {
     const existingLike = await client.db.like.findFirst({
-      where: { postId, userIP ,
+      where: { postId, userIP },
     });
 
     if (existingLike) {
@@ -74,23 +74,23 @@ export async function toggleLike(postId: number, userIP: string) {
       await client.db.like.deleteMany({
         where: {
           postId,
-          userIP // Use a combination of fields to uniquely identify the record
+          userIP, // Use a combination of fields to uniquely identify the record
         },
       });
       const post = await client.db.post.update({
         where: { id: postId },
-        data: { likes: { decrement: 1 } }
+        data: { likes: { decrement: 1 } },
       });
       console.log(`Post ID ${postId} unliked by IP: ${userIP}`);
       return { post, liked: false };
     } else {
       // Like
       await client.db.like.create({
-        data: { postId, userIP }
+        data: { postId, userIP },
       });
       const post = await client.db.post.update({
         where: { id: postId },
-        data: { likes: { increment: 1 } }
+        data: { likes: { increment: 1 } },
       });
       console.log(`Post ID ${postId} liked by IP: ${userIP}`);
       return { post, liked: true };

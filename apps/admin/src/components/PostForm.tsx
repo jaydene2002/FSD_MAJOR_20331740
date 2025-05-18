@@ -134,14 +134,16 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
       </div>
 
       <div>
-        <label htmlFor="content" className="font-medium">
-          Content (Markdown)
-        </label>
+          <label htmlFor="content" className="font-medium">
+            Content (Markdown)
+          </label>
 
-        <RichTextEditor
-          value={content}
-          onChange={(value) => setLocalPost({ ...localPost, content: value })}
-        ></RichTextEditor>
+          <RichTextEditor
+            value={content}
+            onChange={(value) =>
+              setLocalPost({ ...localPost, content: value })
+            }
+          ></RichTextEditor>
 
         {errors.content && (
           <p className="mt-1 text-red-600">{errors.content}</p>
