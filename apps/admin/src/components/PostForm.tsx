@@ -139,16 +139,17 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
 
       <div>
         <label htmlFor="content" className="font-medium">
-          Content (Markdown)
+          Content
         </label>
-
-        <MDEditor
-          value={content}
-          onChange={(value) =>
-            setLocalPost({ ...localPost, content: value || "" })
-          }
-          className="w-full rounded border p-2 font-mono"
-        />
+        <div id="markdown-editor-container">
+          <MDEditor
+            value={content}
+            onChange={(value) =>
+              setLocalPost({ ...localPost, content: value || "" })
+            }
+            className="w-full rounded border p-2 font-mono"
+          />
+        </div>
 
         {errors.content && (
           <p className="mt-1 text-red-600">{errors.content}</p>

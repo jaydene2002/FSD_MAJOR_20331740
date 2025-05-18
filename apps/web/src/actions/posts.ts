@@ -2,26 +2,49 @@
 
 import { client } from "@repo/db/client";
 
-export async function fetchUpdatedPosts(urlId?: string) {
+export async function fetchUpdatedPosts(
+  filter: { urlId?: string; category?: string } = {},
+) {
   try {
-    if (urlId) {
-      // Fetch a specific post by ID
-      const post = await client.db.post.findUnique({
-        where: { urlId },
-      });
-      console.log(`Fetched post with url ID ${urlId}:`, post);
-      return post ? [post] : [];
-    } else {
-      // Fetch all active posts
-      const posts = await client.db.post.findMany({
-        where: { active: true },
-        orderBy: { date: "desc" },
-      });
-      console.log("Fetched all active posts:", posts);
-      return posts;
+    const whereClause: any = { active: true };
+
+    if (filter.urlId) {
+      whereClause.urlId = filter.urlId;
     }
+
+    if (filter.category) {
+      whereClause.category = filter.category;
+    }
+
+    console.log("Fetching posts with filter:", filter);
+    const posts = await client.db.post.findMany({
+      where: whereClause,
+      orderBy: { date: "dec" },
+    });
+
+    console.log("Fetched filtered posts:", posts);
+    return posts;
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.error("Error fetching filtered posts:", error);
+    return [];
+  }
+}
+
+export async function loadPaginatedPosts(page: number, limit: number = 10) {
+  try {
+    const skip = (page - 1) * limit;
+
+    const posts = await client.db.post.findMany({
+      where: { active: true },
+      orderBy: { date: "desc" },
+      skip,
+      take: limit,
+    });
+
+    console.log(`Fetched posts for page ${page}:`, posts);
+    return posts;
+  } catch (error) {
+    console.error("Error fetching paginated posts:", error);
     return [];
   }
 }
@@ -43,15 +66,17 @@ export async function incrementViews(postId: number) {
 export async function toggleLike(postId: number, userIP: string) {
   try {
     const existingLike = await client.db.like.findFirst({
-      where: { postId, userIP }
+      where: { postId, userIP ,
     });
 
     if (existingLike) {
       // Unlike
       await client.db.like.deleteMany({
         where: {
-          postId, userIP // Use a combination of fields to uniquely identify the record
-        });
+          postId,
+          userIP // Use a combination of fields to uniquely identify the record
+        },
+      });
       const post = await client.db.post.update({
         where: { id: postId },
         data: { likes: { decrement: 1 } }

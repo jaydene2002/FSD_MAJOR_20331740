@@ -12,8 +12,8 @@ export default async function Page({
   const headersList = await headers();
   const userIP = headersList.get("x-forwarded-for") || "";
 
-  const posts = await fetchUpdatedPosts();
-  const post = posts.find((p) => p.urlId === urlId && p.active);
+  const posts = await fetchUpdatedPosts({ urlId });
+  const post = posts.find((p) => p.active);
 
   if (!post) {
     return <AppLayout>Article not found</AppLayout>;
@@ -23,7 +23,7 @@ export default async function Page({
 
   return (
     <AppLayout>
-      <Post post={post} userIp={userIP} />
+      <Post post={{ ...post, views: post.views + 1 }} userIp={userIP} />
     </AppLayout>
   );
 }
