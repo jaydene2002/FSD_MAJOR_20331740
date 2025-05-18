@@ -1,6 +1,5 @@
 "use server";
 
-import { posts } from "@repo/db/data";
 import { client } from "@repo/db/client";
 
 // Store count information outside the posts array since posts get reset by seed()
@@ -33,46 +32,48 @@ export async function fetchUpdatedPosts(urlId?: string) {
 }
 
 export async function incrementViews(postId: number) {
-  const post = posts.find((p) => p.id === postId);
-  if (post) {
-    if (postId === 1) {
-      post1ViewCount++;
-      if (post1ViewCount % 2 === 1) {
-        post.views = 321;
-      } else {
-        post.views = 322;
-      }
-
-      console.log(
-        `Post ID 1 views set to: ${post.views} (counter: ${post1ViewCount})`,
-      );
-    } else {
-      // Normal behavior for all other posts
-      post.views += 1;
-    }
+  try {
+    const post = await client.db.post.update({
+      where: { id: postId },
+      data: { views: { increment: 1 } },
+    });
+    console.log(`Incremented views for post ID ${postId}:`, post.views);
+    return post;
+  } catch (error) {
+    console.error(`Error incrementing views for post ID ${postId}:`, error);
+    return null;
   }
-  return post;
 }
 
 export async function toggleLike(postId: number, userIP: string) {
-  const post = posts.find((p) => p.id === postId);
-  if (post) {
-    if (!likesByIP[postId]) {
-      likesByIP[postId] = new Set();
-    }
+  try {
+    const existingLike = await client.db.like.findFirst({
+      where: { postId, userIP ,
+    });
 
-    if (likesByIP[postId].has(userIP)) {
+    if (existingLike) {
       // Unlike
-      post.likes -= 1;
-      likesByIP[postId].delete(userIP);
-      console.log("Post Unliked by IP:", userIP);
+      await client.db.like.delete({ where: { id: existingLike.id } });
+      const post = await client.db.post.update({
+        where: { id: postId },
+        data: { likes: { decrement: 1 } }
+      });
+      console.log(`Post ID ${postId} unliked by IP: ${userIP}`);
+      return { post, liked: false };
     } else {
       // Like
-      post.likes += 1;
-      likesByIP[postId].add(userIP);
-      console.log("Post Liked by IP:", userIP);
+      await client.db.like.create({
+        data: { postId, userIP }
+      });
+      const post = await client.db.post.update({
+        where: { id: postId },
+        data: { likes: { increment: 1 } }
+      });
+      console.log(`Post ID ${postId} liked by IP: ${userIP}`);
+      return { post, liked: true };
     }
-    console.log("Updated posts:", posts);
+  } catch (error) {
+    console.error(`Error toggling like for post ID ${postId}:`, error);
+    return null;
   }
-  return { post, liked: likesByIP[postId]?.has(userIP) };
 }

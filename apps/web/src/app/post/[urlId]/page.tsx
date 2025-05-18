@@ -12,7 +12,6 @@ export default async function Page({
   const headersList = await headers();
   const userIP = headersList.get("x-forwarded-for") || "";
 
-  // Fetch posts dynamically and find the specific post by urlId
   const posts = await fetchUpdatedPosts();
   const post = posts.find((p) => p.urlId === urlId && p.active);
 
