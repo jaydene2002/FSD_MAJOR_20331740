@@ -59,7 +59,7 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       }
     };
 
-    const formatText = (tag: string) => {
+    const formatText = (tag: string, attributes?: string) => {
       if (!textareaRef.current) return;
 
       const start = textareaRef.current.selectionStart;
@@ -69,12 +69,39 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
       const before = value.substring(0, start);
       const after = value.substring(end);
 
+      // For strikethrough, use Markdown syntax instead of HTML tag
+      if (tag === "s") {
+        const formattedText = `${before}~~${selectedText}~~${after}`;
+        onChange(formattedText);
+
+        setTimeout(() => {
+          textareaRef.current?.setSelectionRange(start + 2, end + 2);
+        }, 0);
+        return;
+      }
+
+      // For color formatting, use HTML span with style attribute
+      if (tag === "span" && attributes) {
+        const formattedText = `${before}<${tag} ${attributes}>${selectedText}</${tag}>${after}`;
+        onChange(formattedText);
+
+        setTimeout(() => {
+          const totalAddedChars = tag.length + attributes.length + 3;
+          textareaRef.current?.setSelectionRange(start + totalAddedChars, end + totalAddedChars);
+        }, 0);
+        return;
+      }
+
       const formattedText = `${before}<${tag}>${selectedText}</${tag}>${after}`;
       onChange(formattedText);
 
       setTimeout(() => {
         textareaRef.current?.setSelectionRange(start + tag.length + 2, end + tag.length + 2);
       }, 0);
+    };
+
+    const changeTextColor = (color: string) => {
+      formatText("span", `style="color: ${color}"`);
     };
 
     return (
@@ -98,10 +125,32 @@ const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
             <button
               type="button"
               onClick={() => formatText("u")}
-              className="rounded bg-gray-200 px-3 py-1"
+              className="mr-2 rounded bg-gray-200 px-3 py-1"
             >
               Underline
             </button>
+            <button
+              type="button"
+              onClick={() => formatText("s")}
+              className="mr-2 rounded bg-gray-200 px-3 py-1"
+            >
+              Strikethrough
+            </button>
+            <div className="relative inline-block">
+              <button
+                type="button"
+                className="rounded bg-gray-200 px-3 py-1 flex items-center gap-1"
+                onClick={() => document.getElementById("colorpicker")?.click()}
+              >
+                Color
+                <input
+                  type="color"
+                  id="colorpicker"
+                  onChange={(e) => changeTextColor(e.target.value)}
+                  className="absolute opacity-0 h-0 w-0"
+                />
+              </button>
+            </div>
           </div>
           <button
             type="button"
