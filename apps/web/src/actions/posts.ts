@@ -1,6 +1,7 @@
 "use server";
 
 import { client } from "@repo/db/client";
+import { PAGE_LIMIT } from "@/config";
 
 export async function fetchUpdatedPosts(
   filter: { urlId?: string; category?: string } = {},
@@ -30,7 +31,7 @@ export async function fetchUpdatedPosts(
   }
 }
 
-export async function loadPaginatedPosts(page: number = 1, limit: number = 10) {
+export async function loadPaginatedPosts(page: number = 1, limit: number = PAGE_LIMIT) {
   try {
     // Ensure page is at least 1
     const currentPage = Math.max(page, 1);

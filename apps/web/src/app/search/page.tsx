@@ -20,7 +20,7 @@ export default async function Page({
 
   return (
     <AppLayout query={q}>
-      <Main posts={searchResults} />
+      <Main initialPosts={searchResults} />
     </AppLayout>
   );
 }

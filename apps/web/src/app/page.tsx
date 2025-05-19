@@ -4,12 +4,15 @@ import { Main } from "@/components/Main";
 import styles from "./page.module.css";
 
 export default async function Home() {
-  // Fetch posts from the database
-  const { posts } = await loadPaginatedPosts();
+  const { posts, pagination } = await loadPaginatedPosts(1);
 
   return (
     <AppLayout>
-      <Main posts={posts} className={styles.main} />
+      <Main
+        initialPosts={posts}
+        totalPages={pagination.totalPages}
+        className={styles.main}
+      />
     </AppLayout>
   );
 }

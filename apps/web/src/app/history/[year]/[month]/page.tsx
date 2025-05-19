@@ -21,7 +21,7 @@ export default async function Page({
 
   return (
     <AppLayout query={undefined}>
-      <Main posts={filteredPosts} />
+      <Main initialPosts={filteredPosts} />
     </AppLayout>
   );
 }

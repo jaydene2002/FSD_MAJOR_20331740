@@ -18,7 +18,7 @@ export async function AppLayout({
           <LeftMenu />
         </aside>
         
-        <main className="flex-1 ml-64 p-8">
+        <main className="flex-1 ml-64 h-[calc(100vh-4rem)] overflow-hidden">
           <Content>{children}</Content>
         </main>
       </div>

@@ -16,7 +16,7 @@ export default async function Page({
 
   return (
     <AppLayout>
-      <Main posts={categoryPosts} />
+      <Main initialPosts={categoryPosts} />
     </AppLayout>
   );
 }
