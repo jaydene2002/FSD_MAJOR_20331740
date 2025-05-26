@@ -1,33 +1,50 @@
 import React, { useRef, useState, useImperativeHandle, forwardRef } from "react";
 import { marked } from "marked";
 
+//Defining what info our rich text editor requires
 type RichTextEditorProps = {
-  value: string;
-  onChange: (value: string) => void;
+  value: string; // The content of the editor
+  onChange: (value: string) => void; // Calls when text changes
 };
 
+//This parent component saves where the cursor is in the text
+//And puts the cursor back in same place when preview is closed
 export type RichTextEditorRef = {
   saveCursorPosition: () => void;
   restoreCursorPosition: () => void;
 };
-
+//Creates text editor that can talk to parent component
 const RichTextEditor = forwardRef<RichTextEditorRef, RichTextEditorProps>(
-  ({ value, onChange }, ref) => {
+  ({ value, onChange }, ref) => { //Value is what ive written, onChange tells postform I've changed the text
+    //Grabs textbox on screen, the useref here is used to store textarea element
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+    //Remembers where cursor is in text box
     const cursorPositionRef = useRef<{ start: number; end: number }>({ start: 0, end: 0 });
+    //State to show or hide preview
+    //UseState is used here to store the state of the preview
     const [showPreview, setShowPreview] = useState(false);
 
+    //Creates channel between this and postform component, and defines what commands parent can use in this connection 
     useImperativeHandle(ref, () => ({
+      //Called when postform saves cursor positon
       saveCursorPosition: () => {
+        //Checks if textArea elements actually exists
         if (textareaRef.current) {
+          //Storage container for cursor postion and finds current value of that container
           cursorPositionRef.current = {
+            //Tells us character postions where text selection starts
             start: textareaRef.current.selectionStart,
+            //Tells us character postions where text selection ends
             end: textareaRef.current.selectionEnd,
           };
         }
       },
+      
+      //Defines function that postform calls
       restoreCursorPosition: () => {
+        //Checks if textArea elements actually exists
         if (textareaRef.current) {
+          //Gets the start and end of the cursor position from the storage container
           const { start, end } = cursorPositionRef.current;
           textareaRef.current.setSelectionRange(start, end);
           textareaRef.current.focus();
