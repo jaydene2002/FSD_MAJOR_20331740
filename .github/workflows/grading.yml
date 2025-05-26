@@ -1,4 +1,4 @@
-name: Public Grading
+name: Autograding Tests
 
 on:
   push:
@@ -12,9 +12,9 @@ permissions:
   checks: write
 
 jobs:
-  run-tests:
-    name: Run All Assignment Tests
+  run-autograding-tests:
     runs-on: ubuntu-latest
+    name: run-autograding-tests
     env:
       E2E: true
       CI: true
@@ -22,37 +22,54 @@ jobs:
       PASSWORD: 123
       JWT_SECRET: secret
       SKIP_ENV_VALIDATION: true
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Set up job
+        run: echo "Starting autograding tests"
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install PNPM
+      - name: Install PNPM 📦
         uses: pnpm/action-setup@v4
         with:
           version: 8
 
-      - name: Install dependencies
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies 🧪
         run: pnpm install
 
       - name: Install Playwright Browsers
+        working-directory: tests/playwright
         run: pnpm playwright install chromium --with-deps
 
-      - name: Push DB
+      - name: Push Database 📦
         run: pnpm --filter @repo/db db:push
 
-      - name: Build Project
+      - name: Build the project 🏗
         run: pnpm turbo build
 
-      - name: Run test-1
+      # 🧪 Unit Tests
+      - name: Test - Utils
+        run: pnpm --filter @repo/utils test
+
+      - name: Test - Ui
+        run: pnpm --filter @repo/ui test
+
+      - name: Test - Web
+        run: pnpm --filter @repo/web test
+
+      # 🎭 Playwright Tests
+      - name: Test Assignment 1 with Playwright
         run: pnpm turbo test-1
 
-      - name: Run test-2
+      - name: Test Assignment 2 with Playwright
         run: pnpm turbo test-2
 
-      - name: Run test-3
+      - name: Test Assignment 3 with Playwright
         run: pnpm turbo test-3
