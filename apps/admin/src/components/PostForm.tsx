@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Post } from "@repo/db/data";
 import { savePost } from "../actions/posts";
 import RichTextEditor from "./RichTextEditor";
+import ImageUploader from "./ImageUploader";
 
 type PostFormProps = {
   post?: Post;
@@ -11,6 +13,7 @@ type PostFormProps = {
 };
 
 export default function PostForm({ post, isCreate = false }: PostFormProps) {
+    const router = useRouter();
   const defaultPost: Post = isCreate
     ? {
         id: 0, // Temporary ID that will be replaced
@@ -86,6 +89,10 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
     await savePost(localPost);
     setShowGlobalError(false);
     setSuccess(true);
+  };
+
+  const handleCancel = () => {
+    router.push('/'); // Navigate back to admin home page
   };
 
   return (
@@ -186,41 +193,17 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
         {errors.tags && <p className="mt-1 text-red-600">{errors.tags}</p>}
       </div>
 
-      <div>
-        <label htmlFor="imageUrl" className="mb-2 block font-medium">
-          Image URL
-        </label>
-        <input
-          id="imageUrl"
-          name="imageUrl"
-          type="text"
-          value={imageUrl}
-          onChange={(e) =>
-            setLocalPost({ ...localPost, imageUrl: e.target.value })
-          }
-          className="w-full rounded border p-2"
-        />
-        {errors.imageUrl && (
-          <p className="mt-1 text-red-600">{errors.imageUrl}</p>
-        )}
-      </div>
-
-      {imageUrl && (
-        <div className="rounded border p-4">
-          <p className="mb-2 text-sm text-gray-500">Image Display:</p>
-          <img
-            src={imageUrl}
-            alt="Preview"
-            data-test-id="image-preview"
-            className="max-h-64 object-contain"
-          />
-        </div>
-      )}
+      <ImageUploader
+        imageUrl={imageUrl}
+        onImageChange={(url) => setLocalPost({ ...localPost, imageUrl: url })}
+        error={errors.imageUrl}
+      />
       {success && <div>Post updated successfully</div>}
       <div className="flex justify-end gap-4">
         <button
           type="button"
           className="rounded bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300"
+          onClick={handleCancel}
         >
           Cancel
         </button>

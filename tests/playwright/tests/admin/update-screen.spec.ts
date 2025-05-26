@@ -34,12 +34,12 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       // UPDATE SCREEN > There must be the following fields which must be validated for errors:
 
       // UPDATE SCREEN > Title
-
-      await userPage.getByLabel("Title").clear();
+      // replaced getByLabel("Title") with getByRole("textbox", { name: "Title" }) as it is conflicting with library
+      await userPage.getByRole("textbox", { name: "Title" }).clear();
       await saveButton.click();
 
       await expect(userPage.getByText("Title is required")).toBeVisible();
-      await userPage.getByLabel("Title").fill("New title");
+      await userPage.getByRole("textbox", { name: "Title" }).fill("New title");
       await saveButton.click();
       await expect(userPage.getByText("Title is required")).not.toBeVisible();
 
@@ -130,7 +130,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // BACKEND / ADMIN / UPDATE SCREEN > Logged in user can save changes to database, if the form is validated
 
-      await userPage.getByLabel("Title").fill("New title");
+      await userPage.getByRole("textbox", { name: "Title" }).fill("New title");
       await userPage.getByLabel("Description").fill("New Description");
       await userPage.getByLabel("Content").fill("New Content");
       await userPage
@@ -167,7 +167,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // BACKEND / ADMIN / UPDATE SCREEN > Logged in user can create a new post to the database, if the form is validated
 
-      await userPage.getByLabel("Title").fill("New title");
+      await userPage.getByRole("textbox", { name: "Title" }).fill("New title");
       await userPage.getByLabel("Category").fill("React");
       await userPage.getByLabel("Description").fill("New Description");
       await userPage.getByLabel("Content").fill("New Content");
@@ -285,7 +285,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
         userPage.getByText("Please fix the errors before saving"),
       ).not.toBeVisible();
 
-      await userPage.getByLabel("Title").clear();
+      await userPage.getByRole("textbox", { name: "Title" }).clear();
       await userPage.getByText("Save").click();
       await expect(
         userPage.getByText("Please fix the errors before saving"),
