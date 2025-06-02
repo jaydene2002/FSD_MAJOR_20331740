@@ -9,7 +9,7 @@ export function BlogList({ posts }: { posts: Post[] }) {
   return (
     <div className="mt-6 mb-16 flex flex-col gap-8">
       <div className="w-full mx-auto max-w-4xl my-5 mb-16">
-        <h1 className="text-4xl font-medium font-bold text-black dark:text-white mb-2">From the blog</h1>
+        <h1 className="text-4xl font-medium text-black dark:text-white mb-2">From the blog</h1>
         <p className="text-black dark:text-white">Learn how to grow your business from our expert advice.</p>
       </div>
       {posts.map((post) => (
