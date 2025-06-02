@@ -31,7 +31,19 @@ export async function fetchUpdatedPosts(
   }
 }
 
-export async function loadPaginatedPosts(page: number = 1, limit: number = PAGE_LIMIT) {
+export async function getPostWithLikeStatus(postId: number, userIP: string) {
+  const post = await client.db.post.findUnique({ where: { id: postId, active: true } });
+  const like = await client.db.like.findFirst({ where: { postId, userIP } });
+  return {
+    ...post,
+    liked: !!like,
+  };
+}
+
+export async function loadPaginatedPosts(
+  page: number = 1,
+  limit: number = PAGE_LIMIT,
+) {
   try {
     // Ensure page is at least 1
     const currentPage = Math.max(page, 1);

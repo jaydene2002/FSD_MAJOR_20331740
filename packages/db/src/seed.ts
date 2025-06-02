@@ -1,5 +1,5 @@
 import { client } from "./client.js";
-import { posts } from "./data.js";
+import { posts, morePosts } from "./data.js";
 
 export async function seed() {
   // TODO: Uncomment below once you set up Prisma and loaded data to your database
@@ -45,6 +45,30 @@ export async function seed() {
     await client.db.post.update({
       where: { id: createdPost.id },
       data: { likes: post.likes },
+    });
+  }
+}
+
+export async function seedMore() {
+  console.log("🌱 Seeding more data");
+  for (const post of morePosts) {
+    await client.db.post.create({
+      data: {
+        title: post.title,
+        content: post.content,
+        category: post.category,
+        description: post.description,
+        imageUrl: post.imageUrl,
+        tags: post.tags
+          .split(",")
+          .map((p) => p.trim())
+          .join(","),
+        urlId: post.urlId,
+        active: post.active,
+        date: post.date,
+        views: post.views,
+        likes: post.likes,
+      },
     });
   }
 }

@@ -1,7 +1,8 @@
 import { AppLayout } from "@/components/Layout/AppLayout";
-import { fetchUpdatedPosts, incrementViews } from "@/actions/posts";
+import { getPostWithLikeStatus, incrementViews } from "@/actions/posts";
 import { Post } from "@/components/Blog/Post";
 import { headers } from "next/headers";
+import { client } from "@repo/db/client";
 
 export default async function Page({
   params,
@@ -12,10 +13,16 @@ export default async function Page({
   const headersList = await headers();
   const userIP = headersList.get("x-forwarded-for") || "";
 
-  const posts = await fetchUpdatedPosts({ urlId });
-  const post = posts.find((p) => p.active);
+  // Fetch post by urlId
+  const postRecord = await client.db.post.findUnique({ where: { urlId, active: true } });
+  if (!postRecord) {
+    return <AppLayout>Article not found</AppLayout>;
+  }
 
-  if (!post) {
+  // Now use the numeric id
+  const post = await getPostWithLikeStatus(postRecord.id, userIP);
+
+  if (!post || post.id === undefined) {
     return <AppLayout>Article not found</AppLayout>;
   }
 
@@ -23,7 +30,9 @@ export default async function Page({
 
   return (
     <AppLayout>
-      <Post post={{ ...post, views: post.views + 1 }} userIp={userIP} />
+      <div className="my-0 h-full overflow-y-auto pt-2">
+        <Post post={{ ...post, views: (post.views ?? 0) + 1 }} userIp={userIP} />
+      </div>
     </AppLayout>
   );
 }

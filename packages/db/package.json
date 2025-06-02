@@ -39,6 +39,7 @@
     "@repo/typescript-config": "workspace:*",
     "@repo/ui": "workspace:*",
     "@types/node": "^22.15.3",
+    "tsx": "^4.19.4",
     "vitest": "^3.0.4"
   }
 }

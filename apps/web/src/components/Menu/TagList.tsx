@@ -1,20 +1,24 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { type Post } from "@repo/db/data";
-import { tags } from "../../functions/tags";
+import { tags } from "@/functions/tags";
 import { LinkList } from "./LinkList";
 import { SummaryItem } from "./SummaryItem";
 import { toUrlPath } from "@repo/utils/url";
 
-export async function TagList({
-  selectedTag,
-  posts,
-}: {
-  selectedTag?: string;
-  posts: Post[];
-}) {
-  const postTags = await tags(posts);
+export function TagList({ posts }: { posts: Post[] }) {
+  const params = useParams();
+  const selectedTag = params?.tag;
+  const [postTags, setPostTags] = useState<{ name: string; count: number }[]>([]);
+
+  useEffect(() => {
+    tags(posts).then(setPostTags);
+  }, [posts]);
 
   return (
-    <LinkList>  {}
+    <LinkList>
       {postTags.map((item) => (
         <SummaryItem
           key={item.name}

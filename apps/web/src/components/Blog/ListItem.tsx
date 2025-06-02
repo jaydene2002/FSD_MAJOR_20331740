@@ -1,44 +1,62 @@
 import { type Post } from "@repo/db/data";
 import Link from "next/link";
+import { marked } from "marked";
+import { FaRegHeart } from "react-icons/fa";
 
 export function BlogListItem({ post }: { post: Post }) {
-  // Format date
   const date = new Date(post.date);
-  const day = date.getDate().toString().padStart(2, '0');
-  const month = date.toLocaleString('en-US', { month: 'short' });
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = date.toLocaleString("en-US", { month: "short" });
   const year = date.getFullYear();
   const formattedDate = `${day} ${month} ${year}`;
-  
+
   const displayViews = post.views;
-  
+
   return (
-    <article data-test-id={`blog-post-${post.id}`} className="space-y-4">
-      <Link 
-        href={`/post/${post.urlId}`}
-        className="text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 no-underline text-xl font-bold"
-      >
-        {post.title}
-      </Link>
-      
-      <p className="text-gray-600 dark:text-gray-400">{post.description}</p>
-      
-      <div className="flex gap-x-3 text-sm text-gray-600 dark:text-gray-400">
-        <span>{post.category}</span>
-        {post.tags?.split(',').map((tag, index) => (
-          <span key={index}>#{tag.trim()}</span>
-        ))}
-        <span>{formattedDate}</span>
-        <span>{displayViews} views</span>
-        <span>{post.likes} likes</span>
-      </div>
-      
+    <article
+      data-test-id={`blog-post-${post.id}`}
+      className="prose mx-auto w-full max-w-4xl rounded-lg bg-gray-100 dark:bg-gray-900 grid grid-rows-[30%_70%] grid-cols-1 md:grid-rows-1 md:grid-cols-[35%_65%] aspect-[7/5] md:aspect-[5/2] space-y-4"
+    >
       {post.imageUrl && (
-        <img 
+        <img
           src={post.imageUrl}
           alt={post.title}
-          className="w-full rounded-lg"
+          className="h-full w-full rounded-lg object-cover"
         />
       )}
+      <div className="flex h-full min-h-0 flex-col p-4">
+        <div className="flex gap-6 items-center">
+          <span className="text-gray-600 dark:text-gray-400">{formattedDate}</span>
+          <span className="py-1 px-4 bg-white rounded-full">{post.category}</span>
+        </div>
+        <div className="my-2">
+          <Link
+            href={`/post/${post.urlId}`}
+            className="text-xl font-bold text-gray-900 no-underline hover:text-gray-600 dark:text-white dark:hover:text-gray-300"
+          >
+            {post.title}
+          </Link>
+        </div>
+        <div className="prose dark:prose-invert max-w-none">
+          <div dangerouslySetInnerHTML={{ __html: marked(post.description) }} />
+        </div>
+
+        <div className="mt-auto gap-x-3 text-sm text-gray-600 dark:text-gray-400">
+          <div className="flex gap-2">
+            {post.tags
+              ?.split(",")
+              .map((tag, index) => <span key={index}>#{tag.trim()}</span>)}
+          </div>
+          <hr className="!my-4 border-t border-gray-300 dark:border-gray-700" />
+          <div className="flex items-center justify-between">
+            <span>{displayViews} views</span>
+            <div className="flex items-center gap-2">
+              <FaRegHeart className="h-4 w-4 text-red-500" />
+              <span>{post.likes} likes</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </article>
   );
 }

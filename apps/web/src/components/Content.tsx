@@ -1,5 +1,12 @@
 import type { PropsWithChildren } from "react";
 
-export function Content({ children }: PropsWithChildren) {
-  return <div>{children}</div>;
+interface ContentProps {
+  query?: string;
+}
+
+export function Content({ 
+  children,
+  query 
+}: PropsWithChildren<ContentProps>) {
+  return <div className="h-full">{children}</div>;
 }

@@ -1,22 +1,28 @@
+"use client";
+
 import { categories } from "@/functions/categories";
 import type { Post } from "@repo/db/data";
 import { toUrlPath } from "@repo/utils/url";
 import { LinkList } from "./LinkList";
-import { SummaryItem } from "./SummaryItem";
+import { usePathname } from "next/navigation";
+import { MenuItem } from "@/components/Menu/MenuItem";
 
 export function CategoryList({ posts }: { posts: Post[] }) {
-  
+  const pathname = usePathname();
+  const selectedCategory =
+    pathname && pathname.startsWith("/category/")
+      ? decodeURIComponent(pathname.split("/category/")[1] || "")
+      : "";
+
   const computedCategories = categories(posts);
 
-  
   const hasMongo = computedCategories.find(
-    (c) => c.name.toLowerCase() === "mongo"
+    (c) => c.name.toLowerCase() === "mongo",
   );
   const hasDevOps = computedCategories.find(
-    (c) => c.name.toLowerCase() === "devops"
+    (c) => c.name.toLowerCase() === "devops",
   );
 
-  // Manually add them if they're missing
   if (!hasMongo) {
     computedCategories.push({ name: "Mongo", count: 0 });
   }
@@ -26,16 +32,20 @@ export function CategoryList({ posts }: { posts: Post[] }) {
 
   return (
     <LinkList>
-      {computedCategories.map((item) => (
-        <SummaryItem
-          key={item.name}
-          count={item.count}
-          name={item.name}
-          isSelected={false}
-          link={`/category/${toUrlPath(item.name)}`}
-          title={`Category / ${item.name}`}
-        />
-      ))}
+      {computedCategories.map((item) => {
+        const urlPath = toUrlPath(item.name);
+        const isSelected =
+          selectedCategory.toLowerCase() === urlPath.toLowerCase();
+        return (
+          <MenuItem
+            key={item.name}
+            name={item.name}
+            isSelected={isSelected}
+            link={`/category/${urlPath}`}
+            title={`Category / ${item.name}`}
+          />
+        );
+      })}
     </LinkList>
   );
 }

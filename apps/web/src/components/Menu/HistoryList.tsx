@@ -1,3 +1,6 @@
+"use client";
+
+import { useParams } from "next/navigation";
 import { history } from "@/functions/history";
 import { type Post } from "@repo/db/data";
 import { SummaryItem } from "./SummaryItem";
@@ -18,25 +21,25 @@ const months = [
   "November",
   "December",
 ];
-export async function HistoryList({
-  selectedYear,
-  selectedMonth,
-  posts,
-}: {
-  selectedYear?: string;
-  selectedMonth?: string;
-  posts: Post[];
-}) {
+
+export function HistoryList({ posts }: { posts: Post[] }) {
+  const params = useParams();
+  const selectedYear = params?.year;
+  const selectedMonth = params?.month;
+
   const historyItems = history(posts);
 
   return (
-    <LinkList> {}
+    <LinkList>
       {historyItems.map((item) => (
         <SummaryItem
           key={`${item.year}-${item.month}`}
           count={item.count}
           name={`${months[item.month]}, ${item.year}`}
-          isSelected={selectedYear === item.year.toString() && selectedMonth === item.month.toString()}
+          isSelected={
+            selectedYear === item.year.toString() &&
+            selectedMonth === item.month.toString()
+          }
           link={`/history/${item.year}/${item.month}`}
           title={`History / ${months[item.month]}, ${item.year}`}
         />

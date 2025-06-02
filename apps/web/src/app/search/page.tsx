@@ -7,20 +7,17 @@ export default async function Page({
 }: {
   searchParams: Promise<{ q: string }>;
 }) {
-  const { q } = await searchParams;
+  // Safely handle the Promise resolution
+  const params = await searchParams;
+  const q = params.q || ""; // Handle potential undefined value
 
+  // Fetch all posts to allow client-side filtering
   const posts = await fetchUpdatedPosts();
-  // Filter posts based on search query in title or description
-  const searchResults = posts.filter(
-    (post) =>
-      post.active &&
-      (post.title.toLowerCase().includes(q.toLowerCase()) ||
-        post.description.toLowerCase().includes(q.toLowerCase())),
-  );
 
   return (
     <AppLayout query={q}>
-      <Main initialPosts={searchResults} />
+      <Main initialPosts={posts} initialSearchQuery={q} />
     </AppLayout>
   );
 }
+

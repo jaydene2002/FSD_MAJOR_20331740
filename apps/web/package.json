@@ -18,11 +18,13 @@
     "@repo/ui": "workspace:*",
     "@repo/utils": "workspace:*",
     "@tailwindcss/postcss": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.16",
     "marked": "^15.0.6",
     "next": "^15.1.6",
     "postcss": "^8.5.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
     "tailwindcss": "^4.0.0"
   },

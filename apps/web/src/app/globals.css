@@ -36,3 +36,27 @@ html {
   --color-wsu: var(--wsu);
   --color-wsu-light: var(--wsu-light);
 }
+.prose ol {
+  list-style-type: decimal !important;
+  margin-left: 1.5em !important;
+}
+.prose ul {
+  list-style-type: disc !important;
+  margin-left: 1.5em !important;
+}
+
+@media (min-width: 768px) {
+  /* Fixed sidebar layout */
+  .fixed-sidebar {
+    position: fixed;
+    width: 16rem; /* 64px, matches w-64 */
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  /* Main content layout with sidebar space */
+  .sidebar-content {
+    margin-left: 16rem;
+    width: calc(100% - 16rem);
+  }
+}

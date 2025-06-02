@@ -1,4 +1,4 @@
-import { seed } from "@repo/db/seed";
+import { seed, seedMore } from "@repo/db/seed";
 import { expect, test, type Page } from "./fixtures";
 
 test.beforeAll(async () => {
@@ -167,4 +167,22 @@ test.describe("HOME SCREEN", () => {
       await expect(page).toHaveURL("/search?q=Fatboy");
     },
   );
+
+  test("loads more posts on scroll", { tag: "@a4" }, async ({ page }) => {
+    await seedMore();
+
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    // Scroll the scrollable container, not the window
+    const scrollContainer = await page.locator('div.overflow-y-auto').first();
+    await scrollContainer.evaluate((el) => {
+      el.scrollTop = el.scrollHeight;
+    });
+
+    // Wait for new posts to load
+    await page.waitForTimeout(1000);
+
+    await expect(await page.locator("article").count()).toBeGreaterThan(3);
+  });
 });
