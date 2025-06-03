@@ -37,7 +37,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // UPDATE SCREEN > Title
       // replaced getByLabel("Title") with getByRole("textbox", { name: "Title" }) as it is conflicting with library
-      await userPage.getByRole("textbox", { name: "Title" }).fill("");
+      await userPage.getByRole("textbox", { name: "Title" }).clear();
       await saveButton.click();
 
       await expect(userPage.getByText("Title is required")).toBeVisible();
