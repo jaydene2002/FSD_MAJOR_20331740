@@ -60,7 +60,7 @@ export default function FilterForm() {
   };
 
   return (
-    <div className="sticky top-20 z-30 mb-6 border-b border-gray-200 bg-white p-4">
+    <div className="sticky top-20 z-30 bg-white p-4">
       <div className="flex flex-col md:justify-center gap-4 md:flex-row md:items-end md:gap-4">
         <div className="flex flex-col">
           <label
