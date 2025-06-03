@@ -96,7 +96,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
   };
 
   return (
-    <form className="max-w-4xl space-y-6" onSubmit={handleSubmit}>
+    <form className="space-y-6" onSubmit={handleSubmit}>
       {showGlobalError && (
         <div className="rounded border border-red-300 bg-red-100 p-3 text-red-700">
           Please fix the errors before saving
@@ -115,7 +115,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           onChange={(e) =>
             setLocalPost({ ...localPost, title: e.target.value })
           }
-          className="w-full rounded border p-2"
+          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900 focus:border-transparent focus:outline-none focus:ring-1 focus:ring-gray-900"
         />
         {errors.title && <p className="mt-1 text-red-600">{errors.title}</p>}
       </div>
@@ -124,16 +124,13 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
         <label htmlFor="description" className="mb-2 block font-medium">
           Description
         </label>
-        <textarea
+        <RichTextEditor
           id="description"
-          name="description"
-          rows={3}
           value={description}
-          onChange={(e) =>
-            setLocalPost({ ...localPost, description: e.target.value })
+          onChange={(value) =>
+            setLocalPost({ ...localPost, description: value })
           }
-          className="w-full rounded border p-2"
-        ></textarea>
+        ></RichTextEditor>
         <p className="mt-1 text-sm text-gray-500">Max 200 characters</p>
         {errors.description && (
           <p className="mt-1 text-red-600">{errors.description}</p>
@@ -146,6 +143,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           </label>
 
           <RichTextEditor
+            id="content"
             value={content}
             onChange={(value) =>
               setLocalPost({ ...localPost, content: value })
@@ -170,7 +168,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
             onChange={(e) =>
               setLocalPost({ ...localPost, category: e.target.value })
             }
-            className="w-full rounded border p-2"
+            className="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900 focus:border-transparent focus:outline-none focus:ring-1 focus:ring-gray-900"
           />
           {errors.category && (
             <p className="mt-1 text-red-600">{errors.category}</p>
@@ -188,7 +186,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
           type="text"
           value={tags}
           onChange={(e) => setLocalPost({ ...localPost, tags: e.target.value })}
-          className="w-full rounded border p-2"
+          className="w-full rounded-lg border border-gray-300 bg-white p-2 text-gray-900 focus:border-transparent focus:outline-none focus:ring-1 focus:ring-gray-900"
         />
         {errors.tags && <p className="mt-1 text-red-600">{errors.tags}</p>}
       </div>
@@ -202,14 +200,14 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
       <div className="flex justify-end gap-4">
         <button
           type="button"
-          className="rounded bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300"
+          className="rounded-lg border border-gray-300 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2"
           onClick={handleCancel}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
         >
           Save
         </button>

@@ -1,22 +1,7 @@
-// Import necessary modules from Next.js and our custom components
-import { cookies } from "next/headers";           // Lets us work with cookies on the server side
-import { redirect } from "next/navigation";       // Allows us to redirect users to different pages
 import { isLoggedIn } from "../utils/auth";       // Our function that checks if the user is authenticated
 import FilterForm from "../components/FilterForm"; // Component for filtering posts by various criteria
-import Link from "next/link";                     // Creates client-side navigation links
 import PostList from "../components/PostList";    // Component that displays the list of blog posts
 import { getPosts } from "../actions/posts";      // Server function to fetch posts from the database
-
-
-async function logout() {
-  "use server";
-  
-  // Delete the auth_token cookie to end the user's session
-  (await cookies()).delete("auth_token");
-  
-  // Redirect to the home page which will show the login form since user is no longer authenticated
-  redirect("/");
-}
 
 
 export default async function Home({ 
@@ -79,27 +64,7 @@ export default async function Home({
   
   // Render the admin dashboard with post management interface
   return (
-    <main className="p-6">
-      {/* Header section with title and action buttons */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Admin of Full Stack Blog</h1>
-        <div className="flex gap-4">
-          {/* Create Post button - Links to the post creation page */}
-          <Link href="/posts/create" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-            Create Post
-          </Link>
-          {/* Logout form - Uses our server action to handle logout */}
-          <form action={logout}>
-            <button 
-              type="submit"
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Logout
-            </button>
-          </form>
-        </div>
-      </div>
-      
+    <div>
       {/* Filter interface for searching and filtering posts */}
       <FilterForm />
       
@@ -112,6 +77,6 @@ export default async function Home({
         initialDate={initialDateFilter}       // Initial date filter value
         initialSort={initialSortOption}       // Initial sort option
       />
-    </main>
+    </div>
   );
 }

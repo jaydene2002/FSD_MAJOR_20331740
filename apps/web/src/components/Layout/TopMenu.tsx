@@ -48,7 +48,7 @@ export function TopMenu({ query }: { query?: string }) {
   }, [query]);
 
   return (
-    <div className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+    <div className="sticky h-20 top-0 z-50 pl-12 md:pl-0 border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between gap-2">
           <form

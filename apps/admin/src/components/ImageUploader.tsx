@@ -48,30 +48,7 @@ export default function ImageUploader({ imageUrl, onImageChange, error }: ImageU
           Image Url
         </label>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <input
-              type="file"
-              id="imageUpload"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  handleFileUpload(e.target.files[0]);
-                }
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => document.getElementById("imageUpload")?.click()}
-              className="rounded bg-gray-200 px-3 py-1 text-sm hover:bg-gray-300"
-              disabled={isUploading}
-            >
-              {isUploading ? "Uploading..." : "Upload image"}
-            </button>
-            <span className="text-sm text-gray-500">or</span>
-          </div>
-
+        <div className="flex w-full gap-2">
           <input
             id="imageUrl"
             name="imageUrl"
@@ -79,7 +56,27 @@ export default function ImageUploader({ imageUrl, onImageChange, error }: ImageU
             placeholder="Enter image URL"
             value={imageUrl}
             onChange={(e) => onImageChange(e.target.value)}
-            className="w-full rounded border p-2"
+            className="flex-1 rounded-lg border border-gray-300 bg-white p-2 text-gray-900 focus:border-transparent focus:outline-none focus:ring-1 focus:ring-gray-900 h-10"
+          />
+          <button
+            type="button"
+            onClick={() => document.getElementById("imageUpload")?.click()}
+            className="rounded-lg border border-gray-300 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 h-10 whitespace-nowrap text-sm"
+            disabled={isUploading}
+            style={{ minWidth: "120px" }}
+          >
+            {isUploading ? "Uploading..." : "Upload image"}
+          </button>
+          <input
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) {
+                handleFileUpload(e.target.files[0]);
+              }
+            }}
           />
         </div>
 
@@ -87,13 +84,13 @@ export default function ImageUploader({ imageUrl, onImageChange, error }: ImageU
       </div>
 
       {imageUrl && (
-        <div className="mt-4 rounded border p-4">
+        <div className="mt-4">
           <p className="mb-2 text-sm text-gray-500">Image Display:</p>
           <img
             src={imageUrl}
             alt="Preview"
             data-test-id="image-preview"
-            className="max-h-64 object-contain"
+            className="object-contain w-full rounded-lg border border-gray-300"
           />
         </div>
       )}

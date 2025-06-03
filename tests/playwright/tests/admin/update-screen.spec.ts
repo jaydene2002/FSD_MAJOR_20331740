@@ -1,5 +1,7 @@
 import { seed } from "@repo/db/seed";
 import { expect, test } from "./fixtures";
+import path from "path";
+import { fileURLToPath } from "url";
 
 test.beforeEach(async () => {
   await seed();
@@ -35,7 +37,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // UPDATE SCREEN > Title
       // replaced getByLabel("Title") with getByRole("textbox", { name: "Title" }) as it is conflicting with library
-      await userPage.getByRole("textbox", { name: "Title" }).clear();
+      await userPage.getByRole("textbox", { name: "Title" }).fill("");
       await saveButton.click();
 
       await expect(userPage.getByText("Title is required")).toBeVisible();
@@ -207,8 +209,8 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       await userPage.goto("/post/no-front-end-framework-is-the-best");
 
       // UPDATE SCREEN > Under the Description is a "Preview" button that replaces the text area with a rendered markdown string and changes the title to "Close Preview".
-      await userPage.getByText("Preview").focus();
-      await userPage.getByText("Preview").click();
+      await (await userPage.getByText("Preview").all())[1].focus();
+      await (await userPage.getByText("Preview").all())[1].click();
       await expect(userPage.getByTestId("content-preview")).toBeVisible();
       await expect(
         await userPage.getByTestId("content-preview").innerHTML(),
@@ -234,7 +236,7 @@ test.describe("ADMIN UPDATE SCREEN", () => {
         element.focus();
       });
 
-      await userPage.getByText("Preview").click();
+      await (await userPage.getByText("Preview").all())[1].click();
       await userPage.getByText("Close Preview").click();
 
       textBox = await userPage.getByLabel("Content");
@@ -291,5 +293,72 @@ test.describe("ADMIN UPDATE SCREEN", () => {
         userPage.getByText("Please fix the errors before saving"),
       ).toBeVisible();
     },
+  );
+
+  test("Image upload shows preview", { tag: "@a4" }, async ({ userPage }) => {
+    await userPage.goto("/post/no-front-end-framework-is-the-best");
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const filePath = path.resolve(__dirname, "../assets/test.svg");
+
+    // Get the initial src
+    const preview = userPage.getByTestId("image-preview");
+    const initialSrc = await preview.getAttribute("src");
+
+    // Click the upload button to open file dialog
+    const [fileChooser] = await Promise.all([
+      userPage.waitForEvent("filechooser"),
+      userPage.getByText("Upload image").click(),
+    ]);
+    await fileChooser.setFiles(filePath);
+
+    // Wait for the src to change to a Cloudinary URL
+    await expect
+      .poll(async () => await preview.getAttribute("src"), {
+        timeout: 10000,
+      })
+      .not.toBe(initialSrc);
+
+    const src = await preview.getAttribute("src");
+    expect(src).toContain("cloudinary.com");
+  });
+
+  test(
+    "RichTextEditor renders markdown preview correctly",
+    { tag: "@a4" },
+    async ({ userPage }) => {
+      await userPage.goto("/post/no-front-end-framework-is-the-best");
+
+      // Fill the content field with markdown
+      await userPage.getByLabel("Content").fill("**bold text**");
+
+      // Click the Preview button for Content (second one)
+      await (await userPage.getByText("Preview").all())[1].click();
+
+      // Check that the preview is visible and contains the rendered HTML
+      const preview = userPage.getByTestId("content-preview");
+      await expect(preview).toBeVisible();
+      await expect(await preview.innerHTML()).toContain("<strong>bold text</strong>");
+    }
+  );
+
+  test(
+    "RichTextEditor renders markdown preview for Description",
+    { tag: "@a4" },
+    async ({ userPage }) => {
+      await userPage.goto("/post/no-front-end-framework-is-the-best");
+
+      // Fill the description field with markdown
+      await userPage.getByLabel("Description").fill("**desc bold**");
+
+      // Click the Preview button for Description (first one)
+      await (await userPage.getByText("Preview").first()).click();
+
+      // Check that the preview is visible and contains the rendered HTML
+      const preview = userPage.getByTestId("description-preview");
+      await expect(preview).toBeVisible();
+      await expect(await preview.innerHTML()).toContain("<strong>desc bold</strong>");
+    }
   );
 });

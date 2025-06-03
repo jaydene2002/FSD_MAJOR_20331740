@@ -2,8 +2,16 @@ import { type Post } from "@repo/db/data";
 import Link from "next/link";
 import { marked } from "marked";
 import { FaRegHeart } from "react-icons/fa";
+import { togglePostActive } from "../actions/posts";
+import { Switch } from "./Switch";
 
-export function BlogListItem({ post }: { post: Post }) {
+export function Post({
+  post,
+  onToggleActive,
+}: {
+  post: Post;
+  onToggleActive: (id: number) => void;
+}) {
   const date = new Date(post.date);
   const day = date.getDate().toString().padStart(2, "0");
   const month = date.toLocaleString("en-US", { month: "short" });
@@ -15,7 +23,7 @@ export function BlogListItem({ post }: { post: Post }) {
   return (
     <article
       data-test-id={`blog-post-${post.id}`}
-      className="prose mx-auto w-full max-w-4xl rounded-lg bg-gray-100 dark:bg-gray-900 grid grid-rows-[30%_70%] grid-cols-1 lg:grid-rows-1 lg:grid-cols-[35%_65%] aspect-[7/5] lg:aspect-[5/2] space-y-4"
+      className="prose mx-auto grid aspect-[7/5] w-full max-w-4xl grid-cols-1 grid-rows-[30%_70%] space-y-4 rounded-lg bg-gray-100 md:aspect-[5/2] md:grid-cols-[35%_65%] md:grid-rows-1 dark:bg-gray-900"
     >
       {post.imageUrl && (
         <img
@@ -25,9 +33,19 @@ export function BlogListItem({ post }: { post: Post }) {
         />
       )}
       <div className="flex h-full min-h-0 flex-col p-4">
-        <div className="flex gap-6 items-center">
-          <span className="text-gray-600 dark:text-gray-400">{formattedDate}</span>
-          <span className="py-1 px-4 bg-white rounded-full">{post.category}</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <time className="text-sm text-gray-500">
+              Posted on {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </time>
+            <span className="rounded-full bg-white px-4 py-1">
+              {post.category}
+            </span>
+          </div>
+          <Switch
+            active={post.active}
+            onToggle={() => onToggleActive(post.id)}
+          />
         </div>
         <div className="my-2">
           <Link
@@ -42,11 +60,9 @@ export function BlogListItem({ post }: { post: Post }) {
         </div>
 
         <div className="mt-auto gap-x-3 text-sm text-gray-600 dark:text-gray-400">
-          <div className="flex gap-2">
-            {post.tags
-              ?.split(",")
-              .map((tag, index) => <span key={index}>#{tag.trim()}</span>)}
-          </div>
+          <span className="flex gap-2">
+            #{post.tags.split(",").join(", #")}
+          </span>
           <hr className="!my-4 border-t border-gray-300 dark:border-gray-700" />
           <div className="flex items-center justify-between">
             <span>{displayViews} views</span>

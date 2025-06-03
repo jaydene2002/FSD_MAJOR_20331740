@@ -102,7 +102,7 @@ export function Main({
   return (
     <div
       ref={containerRef}
-      className={`h-screen overflow-y-auto p-8 ${className}`}
+      className={`h-full overflow-y-auto p-8 ${className}`}
     >
       <BlogList posts={filteredPosts} />
       {isLoading && (
