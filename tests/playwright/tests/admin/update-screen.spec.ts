@@ -39,7 +39,6 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       // replaced getByLabel("Title") with getByRole("textbox", { name: "Title" }) as it is conflicting with library
       const titleInput = userPage.getByRole("textbox", { name: "Title" });
       await expect(titleInput).toBeVisible();
-      console.log(await titleInput.getAttribute("id"));
       await userPage.getByRole("textbox", { name: "Title" }).clear();
       await saveButton.click();
 
@@ -137,7 +136,6 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       const titleInput = userPage.getByRole("textbox", { name: "Title" });
       await expect(titleInput).toBeVisible();
-      console.log(await titleInput.getAttribute("id"));
       await userPage.getByRole("textbox", { name: "Title" }).fill("New title");
       await userPage.getByLabel("Description").fill("New Description");
       await userPage.getByLabel("Content").fill("New Content");
