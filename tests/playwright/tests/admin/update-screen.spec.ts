@@ -37,10 +37,13 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // UPDATE SCREEN > Title
       // replaced getByLabel("Title") with getByRole("textbox", { name: "Title" }) as it is conflicting with library
+      const titleInput = userPage.getByRole("textbox", { name: "Title" });
+      await expect(titleInput).toBeVisible();
+      console.log(await titleInput.getAttribute("id"));
       await userPage.getByRole("textbox", { name: "Title" }).clear();
       await saveButton.click();
 
-      await expect(userPage.getByText("Title is required")).toBeVisible();
+      await expect(userPage.getByText("Title is required")).toBeVisible({ timeout: 10000 });
       await userPage.getByRole("textbox", { name: "Title" }).fill("New title");
       await saveButton.click();
       await expect(userPage.getByText("Title is required")).not.toBeVisible();
@@ -132,6 +135,9 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
       // BACKEND / ADMIN / UPDATE SCREEN > Logged in user can save changes to database, if the form is validated
 
+      const titleInput = userPage.getByRole("textbox", { name: "Title" });
+      await expect(titleInput).toBeVisible();
+      console.log(await titleInput.getAttribute("id"));
       await userPage.getByRole("textbox", { name: "Title" }).fill("New title");
       await userPage.getByLabel("Description").fill("New Description");
       await userPage.getByLabel("Content").fill("New Content");
@@ -350,7 +356,11 @@ test.describe("ADMIN UPDATE SCREEN", () => {
       await userPage.goto("/post/no-front-end-framework-is-the-best");
 
       // Fill the description field with markdown
-      await userPage.getByLabel("Description").fill("**desc bold**");
+      const descInput = await userPage.getByLabel("Description");
+      await descInput.click({ clickCount: 3 });
+      await descInput.fill("");
+      await descInput.type("**desc bold**");
+      await userPage.waitForTimeout(100);
 
       // Click the Preview button for Description (first one)
       await (await userPage.getByText("Preview").first()).click();

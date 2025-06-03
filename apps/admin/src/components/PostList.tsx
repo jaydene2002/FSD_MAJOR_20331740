@@ -109,15 +109,20 @@ export default function PostList({
     return result;
   }, [localPosts, searchText, tagFilter, dateFilter, sortOption]);
 
+  const displayPosts =
+    !searchText && !tagFilter && !dateFilter && !sortOption
+      ? filteredPosts.slice(0, 4)
+      : filteredPosts;
+
   return (
     <div className="p-6 mx-auto w-full max-w-4xl space-y-6">
       <div className="flex flex-col gap-8">
-        {filteredPosts.map((post) => (
+        {displayPosts.map((post) => (
           <BlogPost post={post} key={post.id} onToggleActive={handleToggleActive} />
         ))}
       </div>
 
-      {filteredPosts.length === 0 && (
+      {displayPosts.length === 0 && (
         <div className="py-8 text-center">
           <p className="text-gray-500">No posts match your filters</p>
         </div>
