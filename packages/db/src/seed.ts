@@ -7,11 +7,9 @@ export async function seed() {
   await client.db.like.deleteMany();
   await client.db.post.deleteMany();
 
-  // Reset the auto-increment sequence for the Post table
-  await client.db.$executeRawUnsafe(`DELETE
-                                     FROM sqlite_sequence
-                                     WHERE name = 'Post';`);
-
+  // Reset PostgreSQL sequence for Posts table
+  await client.db.$executeRaw`ALTER SEQUENCE "Post_id_seq" RESTART WITH 1;`;
+  
   for (const post of posts) {
     const createdPost = await client.db.post.create({
       data: {
