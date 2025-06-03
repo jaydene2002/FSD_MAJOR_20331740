@@ -46,7 +46,9 @@ jobs:
         working-directory: tests/playwright
         run: pnpm playwright install chromium --with-deps
       - name: Push Database 📦
-        run: pnpm --filter @repo/db db:push
+        run: |
+          sed -i 's/provider = "postgresql"/provider = "sqlite"/' packages/db/prisma/schema.prisma
+          pnpm --filter @repo/db db:push
       - name: Build the project 🏗
         run: pnpm turbo build
 
