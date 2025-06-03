@@ -46,7 +46,9 @@ jobs:
         working-directory: tests/playwright
         run: pnpm playwright install chromium --with-deps
       - name: Push Database 📦
-        run: pnpm --filter @repo/db db:push
+        run: |
+          sed -i 's/provider = "postgresql"/provider = "sqlite"/' packages/db/prisma/schema.prisma
+          pnpm --filter @repo/db db:push
       - name: Build the project 🏗
         run: pnpm turbo build
 
@@ -155,14 +157,30 @@ jobs:
           sectionId: assignment-2-3-blog-backend-in-authentication-and-authorisation
           testResult: ${{steps.npm3.outputs.result}}
 
+      ####################
+      # ASSIGNMENT 2.4
+      ####################
+      - name: Test Assignment 4 with Playwright
+        id: npm4
+        uses: WesternSydneyUniversity/autograding-command-grader@v2
+        continue-on-error: true
+        with:
+          working-directory: .
+          test-name: Part 4 - New Features
+          command: pnpm turbo test-4
+          timeout: 10
+          max-score: 1
+
       - name: Autograding Reporter
         uses: education/autograding-grading-reporter@v1
         env:
           NPM1_RESULTS: "${{steps.npm1.outputs.result}}"
           NPM2_RESULTS: "${{steps.npm2.outputs.result}}"
           NPM3_RESULTS: "${{steps.npm3.outputs.result}}"
+          NPM4_RESULTS: "${{steps.npm4.outputs.result}}"
           TESTUTILS_RESULTS: "${{steps.testUtils.outputs.result}}"
           TESTUI_RESULTS: "${{steps.testUi.outputs.result}}"
           TESTWEB_RESULTS: "${{steps.testWeb.outputs.result}}"
         with:
-          runners: npm1,npm2,npm3,testUtils,testUi,testWeb
+          runners: npm1,npm2,npm3,npm4,testUtils,testUi,testWeb
+

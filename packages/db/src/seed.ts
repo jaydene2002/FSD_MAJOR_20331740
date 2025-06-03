@@ -2,16 +2,29 @@ import { client } from "./client.js";
 import { posts, morePosts } from "./data.js";
 
 export async function seed() {
-  // TODO: Uncomment below once you set up Prisma and loaded data to your database
+  // Add production check at the beginning
+  if (process.env.NODE_ENV === "production") {
+    console.log("🛑 Seeding prevented in production environment");
+    return;
+  }
+
+  // Keep all your existing code
   console.log("🌱 Seeding data");
   await client.db.like.deleteMany();
   await client.db.post.deleteMany();
 
-  // Reset the auto-increment sequence for the Post table
-  await client.db.$executeRawUnsafe(`DELETE
-                                     FROM sqlite_sequence
-                                     WHERE name = 'Post';`);
-
+  try {
+    // PostgreSQL approach
+    await client.db.$executeRaw`ALTER SEQUENCE "Post_id_seq" RESTART WITH 1;`;
+  } catch (e) {
+    try {
+      // SQLite approach
+      await client.db.$executeRawUnsafe(`DELETE FROM sqlite_sequence WHERE name = 'Post';`);
+    } catch (sqliteError) {
+      console.log("Warning: Could not reset sequence, continuing with seed anyway...");
+    }
+  }
+  
   for (const post of posts) {
     const createdPost = await client.db.post.create({
       data: {
@@ -50,6 +63,13 @@ export async function seed() {
 }
 
 export async function seedMore() {
+  // Add production check at the beginning
+  if (process.env.NODE_ENV === "production") {
+    console.log("🛑 Seeding more data prevented in production environment");
+    return;
+  }
+
+  // Keep all your existing code
   console.log("🌱 Seeding more data");
   for (const post of morePosts) {
     await client.db.post.create({
