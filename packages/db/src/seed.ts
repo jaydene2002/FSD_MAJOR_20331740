@@ -7,8 +7,17 @@ export async function seed() {
   await client.db.like.deleteMany();
   await client.db.post.deleteMany();
 
-  // Reset PostgreSQL sequence for Posts table
+ try {
+  // PostgreSQL approach
   await client.db.$executeRaw`ALTER SEQUENCE "Post_id_seq" RESTART WITH 1;`;
+} catch (e) {
+  try {
+    // SQLite approach
+    await client.db.$executeRawUnsafe(`DELETE FROM sqlite_sequence WHERE name = 'Post';`);
+  } catch (sqliteError) {
+    console.log("Warning: Could not reset sequence, continuing with seed anyway...");
+  }
+}
   
   for (const post of posts) {
     const createdPost = await client.db.post.create({
