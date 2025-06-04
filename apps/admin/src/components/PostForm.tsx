@@ -196,7 +196,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
       />
       {success && (
         <div className="mb-2 flex items-center justify-between rounded border border-green-300 bg-green-100 p-3 text-green-800">
-          <span>Post saved successfully</span>
+          <span>Post updated successfully</span>
           <button
             type="button"
             className="ml-4 font-bold text-green-700 hover:text-green-900"
