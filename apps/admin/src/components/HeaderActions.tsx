@@ -1,12 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaPlus, FaShare } from "react-icons/fa";
 import Link from "next/link";
 
-export const HeaderActions = ({ logout }: { logout: () => void }) => {
+export const HeaderActions = ({
+  logout,
+  loggedIn,
+}: {
+  logout: () => void;
+  loggedIn: boolean;
+}) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL || "/";
 
   useEffect(() => {
     if (!open) return;
@@ -29,28 +36,39 @@ export const HeaderActions = ({ logout }: { logout: () => void }) => {
         {open ? <FaTimes size={24} /> : <FaBars size={24} />}
       </button>
       <div
-        className={`
-          flex gap-4
-          ${open ? "flex-col absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded shadow-lg z-50 p-4" : ""}
-          ${open ? "md:hidden" : "hidden md:flex"}
-        `}
+        className={`flex gap-4 ${open ? "absolute right-0 z-50 mt-2 w-48 flex-col rounded bg-white p-4 shadow-lg dark:bg-gray-800" : ""} ${open ? "md:hidden" : "hidden md:flex"} `}
       >
         <Link
-          href="/posts/create"
-          className="rounded-lg bg-gray-400 px-4 py-2 text-white hover:bg-gray-700"
+          href={clientUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 rounded-lg bg-gray-200 px-4 py-2 hover:bg-gray-300"
           onClick={() => setOpen(false)}
         >
-          Create Post
+          <FaShare />
+          Go to Client
         </Link>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="rounded-lg bg-white px-4 py-2 text-red-900 outline outline-red-900 hover:text-white hover:bg-red-900 w-full text-left"
-            onClick={() => setOpen(false)}
-          >
-            Logout
-          </button>
-        </form>
+        {loggedIn && (
+          <>
+            <Link
+              href="/posts/create"
+              className="flex items-center gap-2 rounded-lg bg-gray-400 px-4 py-2 text-white hover:bg-gray-700"
+              onClick={() => setOpen(false)}
+            >
+              <FaPlus />
+              Create Post
+            </Link>
+            <form action={logout}>
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-white px-4 py-2 text-left text-red-900 outline outline-red-900 hover:bg-red-900 hover:text-white"
+                onClick={() => setOpen(false)}
+              >
+                Logout
+              </button>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );

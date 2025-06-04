@@ -13,7 +13,7 @@ type PostFormProps = {
 };
 
 export default function PostForm({ post, isCreate = false }: PostFormProps) {
-    const router = useRouter();
+  const router = useRouter();
   const defaultPost: Post = isCreate
     ? {
         id: 0, // Temporary ID that will be replaced
@@ -92,7 +92,7 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
   };
 
   const handleCancel = () => {
-    router.push('/'); // Navigate back to admin home page
+    router.push("/"); // Navigate back to admin home page
   };
 
   return (
@@ -138,17 +138,15 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
       </div>
 
       <div>
-          <label htmlFor="content" className="font-medium">
-            Content (Markdown)
-          </label>
+        <label htmlFor="content" className="font-medium">
+          Content (Markdown)
+        </label>
 
-          <RichTextEditor
-            id="content"
-            value={content}
-            onChange={(value) =>
-              setLocalPost({ ...localPost, content: value })
-            }
-          ></RichTextEditor>
+        <RichTextEditor
+          id="content"
+          value={content}
+          onChange={(value) => setLocalPost({ ...localPost, content: value })}
+        ></RichTextEditor>
 
         {errors.content && (
           <p className="mt-1 text-red-600">{errors.content}</p>
@@ -196,11 +194,23 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
         onImageChange={(url) => setLocalPost({ ...localPost, imageUrl: url })}
         error={errors.imageUrl}
       />
-      {success && <div>Post updated successfully</div>}
+      {success && (
+        <div className="mb-2 flex items-center justify-between rounded border border-green-300 bg-green-100 p-3 text-green-800">
+          <span>Post saved successfully</span>
+          <button
+            type="button"
+            className="ml-4 font-bold text-green-700 hover:text-green-900"
+            aria-label="Close"
+            onClick={() => setSuccess(false)}
+          >
+            ×
+          </button>
+        </div>
+      )}
       <div className="flex justify-end gap-4">
         <button
           type="button"
-          className="rounded-lg border border-gray-300 bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2"
+          className="rounded-lg border border-gray-300 bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300"
           onClick={handleCancel}
         >
           Cancel

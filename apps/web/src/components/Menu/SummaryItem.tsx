@@ -20,12 +20,10 @@ export function SummaryItem({
           isSelected ? "text-blue-600 dark:text-blue-400 selected" : ""
         }`}
       >
-        <span data-href={link}>{name}</span>
-        {count > 0 && (
-          <span data-test-id="post-count" className="ml-1">
-            ({count})
+          <span data-test-id="post-count" className="border border-gray-200 rounded px-2 py-1 mr-2 text-xs text-gray-500 dark:text-gray-300">
+            {count}
           </span>
-        )}
+        <span data-href={link}>{name}</span>
       </a>
     </li>
   );

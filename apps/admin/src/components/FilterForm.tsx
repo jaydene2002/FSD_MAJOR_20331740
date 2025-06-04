@@ -60,8 +60,8 @@ export default function FilterForm() {
   };
 
   return (
-    <div className="sticky top-20 z-30 bg-white p-4">
-      <div className="flex flex-col md:justify-center gap-4 md:flex-row md:items-end md:gap-4">
+    <div className="sticky top-20 z-30 mx-auto w-full max-w-4xl bg-white p-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 md:justify-center gap-4 md:flex-row md:items-end md:gap-4">
         <div className="flex flex-col">
           <label
             htmlFor="content-filter"

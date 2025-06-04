@@ -2,6 +2,7 @@ import { isLoggedIn } from "../utils/auth";       // Our function that checks if
 import FilterForm from "../components/FilterForm"; // Component for filtering posts by various criteria
 import PostList from "../components/PostList";    // Component that displays the list of blog posts
 import { getPosts } from "../actions/posts";      // Server function to fetch posts from the database
+import LoginForm from "../components/LoginForm";
 
 
 export default async function Home({ 
@@ -20,31 +21,10 @@ export default async function Home({
   // AUTHENTICATION CHECK - If not logged in, show the login form
   if (!loggedIn) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="w-full h-[calc(100vh-5rem)] flex flex-col justify-center items-center p-6">
         <h1 className="text-2xl font-bold mb-4">Sign in to your account</h1>
-        {/* Login form that posts directly to our API authentication endpoint */}
-        <form 
-          action="/api/auth" // Form submits to our auth API route
-          method="post"      // Uses HTTP POST method as required for login
-          className="w-full max-w-md space-y-4"
-        >
-          <div>
-            <label htmlFor="password" className="block mb-2">Password</label>
-            <input 
-              id="password"    // Connects input to label for accessibility
-              name="password"  // Field name our API expects
-              type="password"  // Masks the password as dots for security
-              className="w-full p-2 border rounded" 
-            />
-          </div>
-          <button 
-            type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded"
-          >
-            Sign In
-          </button>
-        </form>
-      </main>
+        <LoginForm />
+      </div>
     );
   }
 

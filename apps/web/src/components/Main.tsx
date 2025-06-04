@@ -104,7 +104,7 @@ export function Main({
       ref={containerRef}
       className={`h-full overflow-y-auto p-8 ${className}`}
     >
-      <BlogList posts={filteredPosts} />
+      <BlogList posts={filteredPosts}/>
       {isLoading && (
         <p className="mt-4 text-center text-gray-600 dark:text-gray-400">
           Loading...

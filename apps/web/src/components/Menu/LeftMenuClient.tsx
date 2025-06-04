@@ -49,6 +49,9 @@ export function LeftMenuClient({ posts }: { posts: any }) {
               className="flex flex-1 flex-col gap-y-7 border-t border-gray-200 pt-6 dark:border-gray-700"
             >
               <li className="space-y-3">
+                <h2 className="text-sm font-semibold text-gray-300 dark:text-white">
+                  Categories
+                </h2>
                 <CategoryList posts={posts} />
               </li>
               <li className="space-y-3">

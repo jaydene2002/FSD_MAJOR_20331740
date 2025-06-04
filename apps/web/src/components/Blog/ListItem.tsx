@@ -1,16 +1,30 @@
+import { useState } from "react";
+import { toggleLike } from "@/actions/posts";
 import { type Post } from "@repo/db/data";
 import Link from "next/link";
 import { marked } from "marked";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { useUser } from "@/app/context/UserContext";
 
-export function BlogListItem({ post }: { post: Post }) {
+export function BlogListItem({ post }: { post: Post & { liked?: boolean } }) {
+  const userIp = useUser();
+  const [likes, setLikes] = useState(post.likes);
+  const [liked, setLiked] = useState(post.liked || false);
+
+
   const date = new Date(post.date);
   const day = date.getDate().toString().padStart(2, "0");
   const month = date.toLocaleString("en-US", { month: "short" });
   const year = date.getFullYear();
   const formattedDate = `${day} ${month} ${year}`;
 
-  const displayViews = post.views;
+  const handleLike = async () => {
+    const result = await toggleLike(post.id, userIp || "");
+    if (result?.post) {
+      setLikes(result.post.likes);
+      setLiked(result.liked);
+    }
+  };
 
   return (
     <article
@@ -49,11 +63,20 @@ export function BlogListItem({ post }: { post: Post }) {
           </div>
           <hr className="!my-4 border-t border-gray-300 dark:border-gray-700" />
           <div className="flex items-center justify-between">
-            <span>{displayViews} views</span>
-            <div className="flex items-center gap-2">
-              <FaRegHeart className="h-4 w-4 text-red-500" />
-              <span>{post.likes} likes</span>
-            </div>
+            <span>{post.views} views</span>
+            <span
+              className="flex cursor-pointer select-none items-center gap-2"
+              onClick={handleLike}
+              data-test-id="like-button"
+              title={liked ? "Unlike" : "Like"}
+            >
+              {liked ? (
+                <FaHeart className="h-4 w-4 text-red-600" />
+              ) : (
+                <FaRegHeart className="h-4 w-4 text-red-500" />
+              )}
+              {likes} likes
+            </span>
           </div>
         </div>
       </div>

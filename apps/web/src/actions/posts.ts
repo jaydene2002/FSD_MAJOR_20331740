@@ -43,12 +43,14 @@ export async function getPostWithLikeStatus(postId: number, userIP: string) {
 export async function loadPaginatedPosts(
   page: number = 1,
   limit: number = PAGE_LIMIT,
+  userIP?: string
 ) {
   try {
     // Ensure page is at least 1
     const currentPage = Math.max(page, 1);
     const skip = (currentPage - 1) * limit;
 
+    // Fetch posts
     const posts = await client.db.post.findMany({
       where: { active: true },
       orderBy: { date: "desc" },
@@ -56,12 +58,25 @@ export async function loadPaginatedPosts(
       take: limit,
     });
 
+    // Fetch likes for these posts by this userIP
+    let likes: { postId: number }[] = [];
+    if (userIP) {
+      likes = await client.db.like.findMany({
+        where: { userIP, postId: { in: posts.map((p) => p.id) } },
+        select: { postId: true },
+      });
+    }
+    const likedSet = new Set(likes.map((l) => l.postId));
+    const postsWithLiked = posts.map((post) => ({
+      ...post,
+      liked: likedSet.has(post.id),
+    }));
+
     const totalPosts = await client.db.post.count({ where: { active: true } });
     const totalPages = Math.ceil(totalPosts / limit);
 
-    console.log(`Fetched posts for page ${currentPage}:`, posts);
     return {
-      posts,
+      posts: postsWithLiked,
       pagination: {
         currentPage,
         totalPages,
