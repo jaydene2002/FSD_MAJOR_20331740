@@ -13,7 +13,7 @@ export const HeaderActions = ({
 }) => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL || "/";
+  const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3001/";
 
   useEffect(() => {
     if (!open) return;

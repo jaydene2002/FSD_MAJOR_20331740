@@ -15,8 +15,15 @@ export default function ImageUploader({ imageUrl, onImageChange, error }: ImageU
 
     // Example using Cloudinary's unsigned upload
     try {
-      const cloudName = "dbbigkyhe"; // Replace with your Cloudinary cloud name
-      const unsignedUploadPreset = "blog-asst2"; // Replace with your upload preset
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const unsignedUploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+       // Check if environment variables are defined
+      if (!cloudName || !unsignedUploadPreset) {
+        console.error("Cloudinary environment variables are not defined");
+        setIsUploading(false);
+        return;
+      }
 
       const formData = new FormData();
       formData.append("file", file);
