@@ -20,12 +20,12 @@ export async function POST(request: Request) {
     }
     
     // Check against environment variable password
-    if (password === env.PASSWORD) {
+    if (password === env.PASSWORD ) {
       // Create JWT token
       const token = jwt.sign(
         { userId: "admin" },
         env.JWT_SECRET,
-        { expiresIn: "365d" }
+        { expiresIn: "30d" }
       );
       
       // Set auth cookie
@@ -34,6 +34,7 @@ export async function POST(request: Request) {
         value: token,
         path: "/",
         httpOnly: true,
+        maxAge: 2592000,
       });
       
       // For form submissions, redirect to home page

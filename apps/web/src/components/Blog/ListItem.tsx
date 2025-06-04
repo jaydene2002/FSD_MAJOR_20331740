@@ -55,7 +55,6 @@ export function BlogListItem({ post }: { post: Post & { liked?: boolean } }) {
           <div className="flex items-center justify-between">
             <span>{displayViews} views</span>
             <div className="flex items-center gap-2">
-              <FaRegHeart className="h-4 w-4 text-red-500" />
               <span>{post.likes} likes</span>
             </div>
           </div>

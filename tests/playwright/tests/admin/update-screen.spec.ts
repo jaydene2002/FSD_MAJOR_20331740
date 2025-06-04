@@ -301,7 +301,8 @@ test.describe("ADMIN UPDATE SCREEN", () => {
 
   test("Image upload shows preview", { tag: "@a4" }, async ({ userPage }) => {
     await userPage.goto("/post/no-front-end-framework-is-the-best");
-
+    
+// @ts-expect-error: import.meta.url is supported in our environment
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     const filePath = path.resolve(__dirname, "../assets/test.svg");
