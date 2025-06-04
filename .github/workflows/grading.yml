@@ -53,7 +53,12 @@ jobs:
           pnpm --filter @repo/db db:push
       - name: Build the project 🏗
         run: pnpm turbo build
-
+      # Add this new step here
+      - name: Setup environment files for tests
+        run: |
+          mkdir -p apps/admin
+          echo "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> apps/admin/.env
+          echo "NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=${{ secrets.CLOUDINARY_UPLOAD_PRESET }}" >> apps/admin/.env
       ####################
       # UTILS TESTS
       ####################
