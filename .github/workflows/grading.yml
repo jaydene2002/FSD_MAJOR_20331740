@@ -18,6 +18,8 @@ jobs:
       COURSE_ID: full-stack-development-comp3036-2025
       PASSWORD: 123
       JWT_SECRET: secret
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET: ${{ secrets.CLOUDINARY_UPLOAD_PRESET }}
       # NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
       # NEXTAUTH_URL: http://127.0.0.1:3001/
       # VERCEL_URL: http://127.0.0.1:3001/
