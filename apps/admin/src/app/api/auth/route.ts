@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       const token = jwt.sign(
         { userId: "admin" },
         env.JWT_SECRET,
-        { expiresIn: "30d" }
+        { expiresIn: "24h" }
       );
       
       // Set auth cookie
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         value: token,
         path: "/",
         httpOnly: true,
-        maxAge: 2592000,
+        maxAge: 86400,
       });
       
       // For form submissions, redirect to home page
