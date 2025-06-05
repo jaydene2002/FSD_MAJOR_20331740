@@ -4,6 +4,7 @@
 - Database: PostgreSQL 
 - Pnpm version 8 or higher, preferably
 - Cloudinary Account with cloud name and create an upload preset.
+- Make sure all dependancies are installed
 
 # New environment variables
 Please set up your local environment variables accordingly by following the .env example structure in both the apps/admin folder and packages/db folder
