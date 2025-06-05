@@ -1,7 +1,26 @@
-# Assignment 2 - Blog - Client App
+# Major Assignment - Blog Application
 
-The goal of this assignment is to implement all the client side functionality.
-Example implementation is in the image below.
+# Pre-requisites
+- Database: PostgreSQL 
+- Pnpm version 8 or higher, preferably
+- Cloudinary Account with cloud name and create an upload preset.
+
+# New environment variables
+Please set up your local environment variables accordingly by following the .env example structure in both the apps/admin folder and packages/db folder
+
+# Setting up database
+In packages/db folder:
+- run pnpm prisma migrate dev --name init **OR** pnpm prisma db push if you dont wanna use migrations
+- run pnpm prisma db seed
+- run pnpm prisma generate
+- If for some odd reason it doesn't work, run a test like turbo test-1 and that should ppopulate the app with dummy data
+
+# New features 
+Implemented new features for infinite scroll, image upload via Cloudinary, and rich text editor for creating and editing blog posts. The rich text editor will be used in the description and content (markdown).
+
+# New E2E tests
+Please run turbo test-4, which will run tests on the new features I have implemented
+
 
 ## Success Criteria
 
