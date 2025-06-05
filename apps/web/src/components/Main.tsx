@@ -3,7 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import BlogList from "./Blog/List";
 import { PAGE_LIMIT } from "@/config";
-
+/**
+ * Main content component with infinite scroll pagination.
+ * Handles post filtering, search functionality, and dynamic loading.
+ * Manages scroll events to fetch additional posts when user reaches bottom.
+ * Uses efficient state management for filtered and unfiltered post collections.
+ * Provides loading indicators and empty state messaging for better UX.
+ */
 type InfiniteScrollProps = {
   initialPosts: any[];
   totalPages?: number;

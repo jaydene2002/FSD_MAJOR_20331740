@@ -1,4 +1,17 @@
-// ImageUploader.tsx
+/**
+ * Image Uploader component for the admin interface
+ * 
+ * This component handles both direct URL input and file uploads for post images.
+ * It integrates with Cloudinary for cloud-based image storage and provides
+ * immediate visual feedback with a preview.
+ * 
+ * Features:
+ * - Manual URL input field
+ * - File upload button with Cloudinary integration
+ * - Loading state during upload process
+ * - Image preview
+ * - Error state display
+ */
 import { useState } from "react";
 
 type ImageUploaderProps = {

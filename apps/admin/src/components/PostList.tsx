@@ -1,5 +1,11 @@
 "use client";
-
+/**
+ * Post list component for admin interface
+ * 
+ * Displays filterable, sortable list of blog posts with active status toggles.
+ * Handles search text, tag filtering, date filtering, and various sort options.
+ * Updates dynamically based on URL parameters and custom events.
+ */
 import { Post } from "@repo/db/data";
 import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";

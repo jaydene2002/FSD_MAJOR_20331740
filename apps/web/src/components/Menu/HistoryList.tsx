@@ -5,7 +5,7 @@ import { history } from "@/functions/history";
 import { type Post } from "@repo/db/data";
 import { SummaryItem } from "./SummaryItem";
 import { LinkList } from "./LinkList";
-
+//Displays history of posts in a sidebar menu based on active posts
 const months = [
   "",
   "January",

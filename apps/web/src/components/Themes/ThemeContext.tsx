@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-
+// This file defines a context for managing theme state in a React application.
 export type Theme = "light" | "dark";
 
 interface ThemeContextProps {

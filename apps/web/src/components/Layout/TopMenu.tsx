@@ -3,7 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import ThemeSwitch from "../Themes/ThemeSwitcher";
-
+/**
+ * Top navigation menu component with search functionality and theme toggle.
+ * Implements debounced search with URL updates and real-time filtering.
+ * Maintains synchronized state between URL parameters and search input.
+ */
 function debounce<T extends (...args: any[]) => any>(fn: T, delay = 300) {
   let timeoutId: any;
   return function (this: ThisParameterType<T>, ...args: Parameters<T>) {

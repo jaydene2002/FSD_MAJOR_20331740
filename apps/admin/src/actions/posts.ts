@@ -1,5 +1,20 @@
 'use server';
 
+/**
+ * Posts management server actions for the admin interface
+ * 
+ * @module posts
+ * 
+ * This module provides server actions for managing blog posts in the admin interface.
+ * It handles CRUD operations for posts including:
+ * - Toggling post visibility (active status)
+ * - Retrieving posts with filtering and sorting options
+ * - Creating new posts and updating existing ones
+ * 
+ * The Post type defines the structure of blog post objects with properties for
+ * content, metadata, and status information.
+ */
+
 import { client } from "@repo/db/client";
 
 // Define Post type directly to avoid any dependencies on @repo/db/data

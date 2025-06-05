@@ -1,5 +1,17 @@
 "use client";
-
+/**
+ * Header actions component for the admin interface
+ * 
+ * This component provides navigation and action buttons in the header section,
+ * including a responsive dropdown menu for mobile devices.
+ * 
+ * Features:
+ * - Link to client site in a new tab
+ * - Create post button (when logged in)
+ * - Logout functionality (when logged in)
+ * - Responsive menu that collapses on mobile devices
+ * - Click-outside detection to close the menu
+ */
 import { useState, useRef, useEffect } from "react";
 import { FaBars, FaTimes, FaPlus, FaShare } from "react-icons/fa";
 import Link from "next/link";

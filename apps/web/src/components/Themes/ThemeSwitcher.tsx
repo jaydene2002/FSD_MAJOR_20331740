@@ -3,7 +3,7 @@
 import { Button } from "@repo/ui/button";
 import { useTheme } from "./ThemeContext";
 import { FaSun, FaMoon } from "react-icons/fa";
-
+//UI component to switch between light and dark themes
 const ThemeSwitch = () => {
   const { theme, toggleTheme } = useTheme();
 

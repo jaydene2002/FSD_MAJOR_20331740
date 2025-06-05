@@ -3,6 +3,12 @@ import Link from "next/link";
 import { marked } from "marked";
 import { FaRegHeart } from "react-icons/fa";
 
+/**
+ * Blog list item component that renders a post preview card.
+ * Displays image, title, description, metadata and engagement metrics.
+ * Handles formatted date display and properly links to the full post.
+ */
+
 export function BlogListItem({ post }: { post: Post & { liked?: boolean } }) {
   const date = new Date(post.date);
   const day = date.getDate().toString().padStart(2, "0");

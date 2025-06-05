@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { ADMIN_URL } from "@/config";
 
+//Home link and admin link for the base menu list
 export function BaseList() {
   const pathname = usePathname();
   const isHome = pathname === "/";

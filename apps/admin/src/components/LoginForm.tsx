@@ -1,5 +1,10 @@
 "use client";
-
+/**
+ * Admin login form component
+ * 
+ * Handles password-based authentication, form validation,
+ * and error display from URL parameters. Submits to auth API.
+ */
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 

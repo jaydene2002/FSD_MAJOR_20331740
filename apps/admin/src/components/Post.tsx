@@ -4,7 +4,13 @@ import { marked } from "marked";
 import { FaRegHeart } from "react-icons/fa";
 import { togglePostActive } from "../actions/posts";
 import { Switch } from "./Switch";
-
+/**
+ * Post component for admin interface
+ * 
+ * Displays a blog post with image, metadata, and content.
+ * Includes toggle for active status and formatted display
+ * of views, likes, tags and publication date.
+ */
 export function Post({
   post,
   onToggleActive,

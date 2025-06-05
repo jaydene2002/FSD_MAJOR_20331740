@@ -1,5 +1,17 @@
 "use client";
 
+/**
+ * Filter form component for the admin interface
+ * 
+ * This component provides filtering and sorting capabilities for the post list.
+ * It maintains filter state for content text search, tag filtering, date filtering,
+ * and sort order selection.
+ * 
+ * The component updates the URL with query parameters to maintain state across
+ * page refreshes and dispatches custom events when filters change to notify
+ * parent components.
+ */
+
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 

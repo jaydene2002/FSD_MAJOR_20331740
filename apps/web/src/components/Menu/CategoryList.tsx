@@ -7,6 +7,7 @@ import { LinkList } from "./LinkList";
 import { usePathname } from "next/navigation";
 import { MenuItem } from "@/components/Menu/MenuItem";
 
+//Displays categories of posts in a sidebar menu based on active posts
 export function CategoryList({ posts }: { posts: Post[] }) {
   const pathname = usePathname();
   const selectedCategory =

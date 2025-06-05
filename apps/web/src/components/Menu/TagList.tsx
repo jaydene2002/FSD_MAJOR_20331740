@@ -8,6 +8,7 @@ import { LinkList } from "./LinkList";
 import { SummaryItem } from "./SummaryItem";
 import { toUrlPath } from "@repo/utils/url";
 
+//Displays the tag lists of posts in a sidebar menu based on active posts
 export function TagList({ posts }: { posts: Post[] }) {
   const params = useParams();
   const selectedTag = params?.tag;

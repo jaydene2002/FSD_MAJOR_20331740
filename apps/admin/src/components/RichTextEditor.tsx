@@ -3,6 +3,20 @@ import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
+/**
+ * Rich Text Editor component for Markdown content editing
+ * 
+ * Provides a markdown editor with preview functionality, cursor position
+ * tracking, and customizable styling. Integrates with MD Editor library
+ * for editing and rendering markdown content.
+ * 
+ * Features:
+ * - Edit/Preview toggle
+ * - Cursor position preservation
+ * - Custom styling
+ * - Imperative handle for external cursor control
+ */
+
 type RichTextEditorProps = {
   id: string;
   value: string;

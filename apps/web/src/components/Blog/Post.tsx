@@ -5,7 +5,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { marked } from "marked";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-
+/**
+ * Blog post detail component for displaying full article content.
+ * Handles like/unlike functionality with user IP tracking.
+ * Renders formatted markdown content with proper styling.
+ */
 export function Post({ post, userIp }: { post: any; userIp: string }) {
   const [likes, setLikes] = useState(post.likes);
   const [liked, setLiked] = useState(post.liked || false);

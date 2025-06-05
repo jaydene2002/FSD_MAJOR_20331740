@@ -2,7 +2,11 @@
 
 import { client } from "@repo/db/client";
 import { PAGE_LIMIT } from "@/config";
-
+/**
+ * Server actions that handle posts data fetching and manipulation.
+ * Implements pagination, view counting, and like functionality.
+ * Manages user interactions with blog content.
+ */
 export async function fetchUpdatedPosts(
   filter: { urlId?: string; category?: string } = {},
 ) {
