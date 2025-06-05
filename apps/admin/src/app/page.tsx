@@ -1,7 +1,7 @@
-import { isLoggedIn } from "../utils/auth";       // Our function that checks if the user is authenticated
-import FilterForm from "../components/FilterForm"; // Component for filtering posts by various criteria
-import PostList from "../components/PostList";    // Component that displays the list of blog posts
-import { getPosts } from "../actions/posts";      // Server function to fetch posts from the database
+import { isLoggedIn } from "../utils/auth";       
+import FilterForm from "../components/FilterForm"; 
+import PostList from "../components/PostList";    
+import { getPosts } from "../actions/posts";      
 import LoginForm from "../components/LoginForm";
 
 
@@ -51,11 +51,11 @@ export default async function Home({
       {/* Post list showing all filtered posts from the database */}
       {/* The data is already filtered on the server by our getPosts function */}
       <PostList 
-        allPosts={allPosts} // Pass the pre-filtered posts from the server
-        initialContent={initialContentFilter} // Initial content search value
-        initialTag={initialTagFilter}         // Initial tag filter value
-        initialDate={initialDateFilter}       // Initial date filter value
-        initialSort={initialSortOption}       // Initial sort option
+        allPosts={allPosts} 
+        initialContent={initialContentFilter} 
+        initialTag={initialTagFilter}         
+        initialDate={initialDateFilter}       
+        initialSort={initialSortOption}       
       />
     </div>
   );

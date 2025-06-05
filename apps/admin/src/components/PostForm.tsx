@@ -75,9 +75,9 @@ export default function PostForm({ post, isCreate = false }: PostFormProps) {
       newErrors.tags = "At least one tag is required";
     }
 
-    if (isCreate && !category?.trim()) {
-      newErrors.category = "Category is required";
-    }
+  if (isCreate && (!category?.trim() || !/^[A-Za-z]+$/.test(category || ''))) {
+  newErrors.category = "Category is required and can only contain letters (no spaces, numbers, or special characters)";
+}
 
     setErrors(newErrors);
 
