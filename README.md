@@ -3,7 +3,7 @@
 # Pre-requisites
 - Database: PostgreSQL 
 - Pnpm version 8 or higher, preferably
-- Cloudinary Account with cloud name and create an upload preset.
+- Cloudinary Account with cloud name and create an upload preset (set these in the admin .env)
 - Make sure all dependancies are installed
 
 # New environment variables
