@@ -12,7 +12,7 @@ export default async function CreatePostPage() {
 
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-col p-6">
-      <div className="mb-6 w-full text-right">
+      <div className="mb-6 w-full text-left">
         <Link href="/" className="text-blue-500 hover:text-blue-700">
           ← Back to posts
         </Link>
